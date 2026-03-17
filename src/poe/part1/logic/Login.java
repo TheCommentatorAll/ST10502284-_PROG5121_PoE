@@ -1,0 +1,82 @@
+/**
+ * Student Name: Nicholas Morris
+ * Student Number: ST10502284
+ * Assignment: PROG5121 PoE Part 1 - Registration and Login
+ * Description: This class handles the validation logic for user registration.
+ */
+package poe.part1.logic;
+
+public class Login {
+    
+//first method, username checker
+    public boolean checkUserName(String usr){
+        
+    //Returns true if conditions are met
+        
+        return usr.contains("_") && usr.length() <= 5;
+    }
+    
+//second method, password checker
+    public boolean checkPasswordComplexity(String password){
+        
+        //4 conditions need to be checked
+        // 1. Length >= 8
+        // 2. Contains a capital letter
+        // 3. Contains a number
+        // 4. contains a special character
+        
+    //I will use a FLAG system to check password complexity
+        boolean hasLength = false;
+        boolean  hasCapital = false;
+        boolean  hasNum = false;
+        boolean  hasSpecial = false;
+        
+        //checks for password length condition
+            if(password.length() >= 8){
+                hasLength = true;
+            }
+            
+    //assigns the length of the password        
+        int length = password.length();
+            
+        //cycles through each character 
+            for (int i = 0; i < length; i++) {
+            
+            //stores the character at position i 
+                char c = password.charAt(i);
+                
+                //checks and assigns true values to 
+                    if(Character.isUpperCase(c)){
+                        hasCapital = true;
+                    }else if(Character.isDigit(c)){
+                        hasNum = true;
+                    }else if(!Character.isLetterOrDigit(c)){
+                        hasSpecial = true;
+                    }    
+            }
+            
+        return hasLength==true && hasCapital==true && hasNum==true && hasSpecial==true; 
+    }
+    
+    
+    
+//third method, displays messages depending on return type
+    public String registerUser(String username, String password){
+        
+        if(!checkUserName(username)){
+            
+            return "Username is not correctly formatted, please ensure that your username contains an underscore " +
+                    "and is no more that five characters in length";
+        }else if(!checkPasswordComplexity(password)){
+            
+            return"Password is not correctly formatted, please ensure that the pasword contains at least eight characters " +
+                    ", a capital letter, a number, and a special character";
+        }else{
+            
+            return "Username and password successfully captured, You have been registered successfully!";
+        }
+    }
+    
+    
+    
+}
