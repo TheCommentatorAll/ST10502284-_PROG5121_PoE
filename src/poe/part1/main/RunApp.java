@@ -7,7 +7,6 @@
 package poe.part1.main;
 
 import java.util.Scanner;
-import javax.swing.JOptionPane;
 import poe.part1.logic.Login;
 
 public class RunApp {
