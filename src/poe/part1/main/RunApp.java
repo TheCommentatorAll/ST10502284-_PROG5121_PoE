@@ -12,15 +12,17 @@ import poe.part1.logic.Login;
 public class RunApp {
     public static void main(String[] args) {
         
-        String userName, password, cellphone;
+        Login lgn = new Login();
         
         userName = JOptionPane.showInputDialog("Please enter your username>> ");    
+        password = JOptionPane.showInputDialog("Please enter your password>> ");    
+        password = JOptionPane.showInputDialog("Please enter your password>> ");    
         password = JOptionPane.showInputDialog("Please enter your password>> ");    
         cellphone = JOptionPane.showInputDialog("Please enter your cellphone>> ");    
         
         Login worker = new Login();
         
-        String result = worker.registerUser(userName, password);
+        String result = worker.registerUsername(userName, password);
         
         System.out.println(result);
                
