@@ -1,16 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit4TestClass.java to edit this template
+/**
+ * Unit Tests for Login Logic.
+ * Test data sourced from Part 1 Requirement Table (Page 9).
+ * Reference: Google Gemini (2026) ‘Response to query regarding JUnit implementation 
+ * and test data mapping for Java login validation’. 26 March. 
+ * Available at: https://gemini.google.com/ (Accessed: 26 March 2026).
+ * See reference index [1] for more
  */
 package poe.part1.logic;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-/**
- *
- * @author nexis
- */
 public class LoginTest {
 
     // Create one instance of Login to use for all tests
@@ -18,20 +18,30 @@ public class LoginTest {
 
     @Test
     public void testCheckUserName() {
-        // From PoE Page 9: "kyl_1" should return true
+        //"kyl_1" should return true
         assertTrue(login.checkUserName("kyl_1"));
 
-        // From PoE Page 9: "kyle!!!!!!" should return false
+        //"kyle!!!!!!" should return false
         assertFalse(login.checkUserName("kyle!!!!!!"));
     }
 
     @Test
     public void testCheckPasswordComplexity() {
-        // From PoE: "Ch&&sec@ke99!" should return true
+        //"Ch&&sec@ke99!" should return true
         assertTrue(login.checkPasswordComplexity("Ch&&sec@ke99!"));
 
-        // From your PoE: "password" should return false
+        //"password" should return false
         assertFalse(login.checkPasswordComplexity("password"));
+    }
+    
+    @Test
+    public void testCellPhone(){
+        
+        //+27838968976 should return true
+        assertTrue(login.checkCellPhoneNumber("+27838968976"));
+        
+        //08966553 should return false
+        assertFalse(login.checkCellPhoneNumber("08966553"));
     }
 
     @Test
@@ -51,7 +61,7 @@ public class LoginTest {
         // 1. Setup: Register a user with specific names
         login.registerUser("kyl_1", "Ch&&sec@ke99!", "John", "Doe", "+27838968976");
 
-        // 2. Define the EXACT string the PoE expects
+        // 2. Define the string
         String expected = "Welcome John Doe, it is great to see you again.";
 
         // 3. Run the login and get the status message
