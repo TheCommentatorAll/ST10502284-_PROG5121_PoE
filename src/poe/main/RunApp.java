@@ -4,7 +4,7 @@
  * Assignment: PROG5121 PoE Part 1 - Registration and Login
  * Description: This class handles user input and method calling
  */
-package poe.part1.main;
+package poe.main;
 
 import java.util.Scanner;
 import poe.part1.logic.Login;
