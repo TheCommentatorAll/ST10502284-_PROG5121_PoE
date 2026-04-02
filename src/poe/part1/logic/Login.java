@@ -80,14 +80,29 @@ public class Login {
     //Fourth method, displays messages depending on return type. Also stores entered username and password in local variables
     public String registerUser(String username, String password, String fName, String lName, String cellphoneNumber) {
 
+        //I am going to make use of a String builder to appened certain error messages with eachother.
+        //Initialise StringBuilder object
+        StringBuilder errorBowl = new StringBuilder();
         if (!checkUserName(username)) {
-            return "Username is not correctly formatted, please ensure that your username contains an underscore "
-                    + "and is no more that five characters in length";
+
+            //append String to the Stringbuilder object
+            errorBowl.append(">> Username is not correctly formatted, please ensure that your username contains an underscore "
+                    + "and is no more that five characters in length<<");
+
+            //return the error as a String by converting the Object to a String using toString
+            return errorBowl.toString();
+
         } else if (!checkPasswordComplexity(password)) {
-            return "Password is not correctly formatted, please ensure that the pasword contains at least eight characters "
-                    + ", a capital letter, a number, and a special character";
+            errorBowl.append(">>Password is not correctly formatted, please ensure that the pasword contains at least eight characters "
+                    + ", a capital letter, a number, and a special character<<");
+
+            return errorBowl.toString();
+
         } else if (!checkCellPhoneNumber(cellphoneNumber)) {
-            return "Cellphone incorrectly formatted or does not contain international code, please correct the number and try again.";
+
+            errorBowl.append(">>Cellphone incorrectly formatted or does not contain international code, please correct the number and try again.<<");
+
+            return errorBowl.toString();
         } else {
             //Store entered data into local variables
             this.username = username;
