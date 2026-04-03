@@ -6,8 +6,9 @@
  */
 package poe.part1.logic;
 
-public class Login {
+public class Login {//Class Begin
 
+    //Private variable declaration
     private String username;
     private String password;
     private String cellPhoneNumber;
@@ -17,18 +18,22 @@ public class Login {
     //first method, username checker
     public boolean checkUserName(String username) {
 
+        /* 1. Contains an underscore
+           2. Is 5 characters long or less
+         */
         //Returns true if conditions are met
         return username.contains("_") && username.length() <= 5;
     }
 
     //second method, password checker
     public boolean checkPasswordComplexity(String password) {
-        //4 conditions need to be checked
-        // 1. Length >= 8
-        // 2. Contains a capital letter
-        // 3. Contains a number
-        // 4. contains a special character
 
+        /*4 conditions need to be checked
+          1. Length >= 8
+          2. Contains a capital letter
+          3. Contains a number
+          4. contains a special character
+         */
         //I will use a FLAG system to check password complexity
         boolean hasLength = false;
         boolean hasCapital = false;
@@ -49,7 +54,7 @@ public class Login {
             //stores the character at position i 
             char c = password.charAt(i);
 
-            //checks and assigns true values to 
+            //checks and assigns true values to FLAGS if condition is TRUE
             if (Character.isUpperCase(c)) {
                 hasCapital = true;
             } else if (Character.isDigit(c)) {
@@ -58,7 +63,7 @@ public class Login {
                 hasSpecial = true;
             }
         }
-
+        //returns false if all conditions are not met
         return hasLength == true && hasCapital == true && hasNum == true && hasSpecial == true;
     }
 
@@ -87,22 +92,28 @@ public class Login {
 
             //append String to the Stringbuilder object
             errorBowl.append(">> Username is not correctly formatted, please ensure that your username contains an underscore "
-                    + "and is no more that five characters in length<<");
+                    + "and is no more that five characters in length<<\n");
 
-            //return the error as a String by converting the Object to a String using toString
-            return errorBowl.toString();
-
-        } else if (!checkPasswordComplexity(password)) {
+            //Use individual if statements to check each condition independently and allow for StringBuilder to store each error.
+        }
+        if (!checkPasswordComplexity(password)) {
             errorBowl.append(">>Password is not correctly formatted, please ensure that the pasword contains at least eight characters "
-                    + ", a capital letter, a number, and a special character<<");
+                    + ", a capital letter, a number, and a special character<<\n");
 
-            return errorBowl.toString();
-
-        } else if (!checkCellPhoneNumber(cellphoneNumber)) {
+        }
+        if (!checkCellPhoneNumber(cellphoneNumber)) {
 
             errorBowl.append(">>Cellphone incorrectly formatted or does not contain international code, please correct the number and try again.<<");
 
+            //Use StringBuilder object as condition to check wether there were errors or not
+            //>0 means that there were errors
+        }
+        if (errorBowl.length() > 0) {
+
+            //Converting the StringBuilder object to a String that will be displayed
             return errorBowl.toString();
+
+            //else we return a successful registration
         } else {
             //Store entered data into local variables
             this.username = username;
@@ -111,6 +122,7 @@ public class Login {
             this.surname = lName;
             this.cellPhoneNumber = cellphoneNumber;
 
+            //Assign
             return "Username, Password, and Cellphone number successfully captured.\nYou have been registered successfully!";
         }
     }

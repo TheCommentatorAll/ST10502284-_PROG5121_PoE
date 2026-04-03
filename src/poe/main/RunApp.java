@@ -67,7 +67,7 @@ public class RunApp {
 
             }else {
                 
-                System.out.println("\n[ERROR] \n" + regStatus);
+                System.out.println("\n[!ERROR!]\n" + regStatus);
                 System.out.println("Please try registering again.");
                 
             }
