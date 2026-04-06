@@ -9,16 +9,21 @@ package poe.main;
 import java.util.Scanner;
 import poe.part1.logic.Login;
 
-public class RunApp {
+public class RunApp {//Class Begin
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {//main method start
+
+        //create scanner object for user input
         Scanner input = new Scanner(System.in);
+
         //create a login object called auth
         Login auth = new Login();
+
         //while loop condition
         boolean registrationStatus = false;
 
         do {//start of do-while
+
             //--- REGISTRATION PHASE ---
             System.out.println("-- REGISTER NEW ACCOUNT --");
             System.out.print("Enter your Name: ");
@@ -37,11 +42,13 @@ public class RunApp {
             String registerNumber = input.nextLine();
             System.out.println("-----------------------------------");
 
+            //call registerUser Method from Login.java and assign it to a String with all arguments
             String regStatus = auth.registerUser(registerUsername, registerPassword, registerName, registerSurname, registerNumber);
 
             //Only carry onto User login if registration process was a success
             if (regStatus.contains("registered successfully")) {
 
+                //--- DISPLAY DETAILS FOR LOGIN ---
                 System.out.println(regStatus);
                 System.out.println("-----------------------------------");
                 System.out.println("-- LOGIN DETAILS --");
@@ -57,25 +64,29 @@ public class RunApp {
                 String password = input.nextLine();
                 System.out.println("-----------------------------------");
 
+                //call on loginUser method, assign it to a boolean so we can parse it as an argument
                 boolean isSuccess = auth.loginUser(username, password);
 
+                //parse the boolean as an argument in the returnLoginStatus method
                 String finalMessage = auth.returnLoginStatus(isSuccess);
                 System.out.println("-- STATUS --");
                 System.out.println(finalMessage);
 
+                //end the loop
                 registrationStatus = true;
 
-            }else {
-                
+            } else {
+
                 System.out.println("\n[!ERROR!]\n" + regStatus);
                 System.out.println("Please try registering again.");
-                
+
             }
 
         } while (!registrationStatus);//end of do-while
-        
+
+        //cose the Scanner object
         input.close();
 
-    }
+    }//main method stop
 
-}
+}//Class End
