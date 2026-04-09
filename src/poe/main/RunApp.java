@@ -9,11 +9,8 @@ package poe.main;
 import java.util.Scanner;
 import poe.part1.logic.Login;
 
-public class RunApp {//Class Start
-
-    public static void main(String[] args) {//main method start
-
-        //create scanner object for user input
+public class RunApp {
+    public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         //create a login object called auth
         Login auth = new Login();
