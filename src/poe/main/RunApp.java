@@ -21,6 +21,7 @@ public class RunApp {//Class Begin
 
         //while loop condition
         boolean registrationStatus = false;
+        boolean loginStatus = false;
 
         do {//start of do-while
 
@@ -55,23 +56,33 @@ public class RunApp {//Class Begin
                 System.out.println("Your username is: " + registerUsername + "\nYour password is: " + registerPassword);
                 System.out.println("-----------------------------------");
 
-                //--- USER LOGIN PHASE ---
-                System.out.println("-- LOGIN TO ACCOUNT --");
-                System.out.print("Please enter your Username: ");
-                String username = input.nextLine();
+                while (!loginStatus) {//Start of While Loop
+                    //--- USER LOGIN PHASE ---
+                    System.out.println("-- LOGIN TO ACCOUNT --");
+                    System.out.print("Please enter your Username: ");
+                    String username = input.nextLine();
 
-                System.out.print(">" + "\nPlease enter your Password: ");
-                String password = input.nextLine();
-                System.out.println("-----------------------------------");
+                    System.out.print(">" + "\nPlease enter your Password: ");
+                    String password = input.nextLine();
+                    System.out.println("-----------------------------------");
 
-                //call on loginUser method, assign it to a boolean so we can parse it as an argument
-                boolean isSuccess = auth.loginUser(username, password);
+                    //call on loginUser method, assign it to a boolean so we can parse it as an argument
+                    boolean isSuccess = auth.loginUser(username, password);
 
-                //parse the boolean as an argument in the returnLoginStatus method
-                String finalMessage = auth.returnLoginStatus(isSuccess);
-                System.out.println("-- STATUS --");
-                System.out.println(finalMessage);
+                    //parse the boolean as an argument in the returnLoginStatus method
+                    String finalMessage = auth.returnLoginStatus(isSuccess);
+                    if (finalMessage.contains("Welcome")) {
+                        System.out.println("-- STATUS --");
+                        System.out.println(finalMessage);
+                        //end the while loop
+                        loginStatus = true;
+                    } else {
+                        System.out.println("-- STATUS --");
+                        System.out.println(finalMessage);
+                    }
 
+                }//end of While Loop
+                
                 //end the loop
                 registrationStatus = true;
 
@@ -82,7 +93,7 @@ public class RunApp {//Class Begin
 
             }
 
-        } while (!registrationStatus);//end of do-while
+        } while (!registrationStatus);//end of do-while loop
 
         //cose the Scanner object
         input.close();
