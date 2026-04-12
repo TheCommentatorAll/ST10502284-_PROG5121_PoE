@@ -9,9 +9,9 @@ package poe.main;
 import java.util.Scanner;
 import poe.part1.logic.Login;
 
-public class RunApp {//Class Begin
+public class RunApp {//start of class
 
-    public static void main(String[] args) {//main method start
+    public static void main(String[] args) {//start of main method
 
         //create scanner object for user input
         Scanner input = new Scanner(System.in);
@@ -22,7 +22,8 @@ public class RunApp {//Class Begin
         //while loop condition
         boolean registrationStatus = false;
         boolean loginStatus = false;
-
+        
+        //this do-while loop allows for the user to re-enter details if they get an error
         do {//start of do-while
 
             //--- REGISTRATION PHASE ---
@@ -55,7 +56,8 @@ public class RunApp {//Class Begin
                 System.out.println("-- LOGIN DETAILS --");
                 System.out.println("Your username is: " + registerUsername + "\nYour password is: " + registerPassword);
                 System.out.println("-----------------------------------");
-
+                
+                //i use another while loop to allow for the user to Re-enter their details in case of typing the wrong details
                 while (!loginStatus) {//Start of While Loop
                     //--- USER LOGIN PHASE ---
                     System.out.println("-- LOGIN TO ACCOUNT --");
@@ -98,6 +100,6 @@ public class RunApp {//Class Begin
         //cose the Scanner object
         input.close();
 
-    }//main method stop
+    }//end of main method
 
-}//Class End
+}//end of class
