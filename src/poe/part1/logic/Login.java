@@ -2,30 +2,30 @@
  * Student Name: Nicholas Morris
  * Student Number: ST10502284
  * Assignment: PROG5121 PoE Part 1 - Registration and Login
- * Description: This class handles the validation logic for user registration.
+ * Description: This class handles the validation logic for for the Main class
  */
 package poe.part1.logic;
 
-public class Login {//Class Begin
+public class Login {//start of class
 
-    //Private variable declaration
+    //declare my local variables
     private String username;
     private String password;
     private String cellPhoneNumber;
     private String firstName;
     private String surname;
 
-    //first method, username checker
+    //My first method, username validator
     public boolean checkUserName(String username) {
 
         /* 1. Contains an underscore
            2. Is 5 characters long or less
          */
-        //Returns true if conditions are met
+        //Returns true if conditions are met, returns false otherwise
         return username.contains("_") && username.length() <= 5;
     }
 
-    //second method, password checker
+    //My second method, password checker
     public boolean checkPasswordComplexity(String password) {
 
         /*4 conditions need to be checked
@@ -40,18 +40,18 @@ public class Login {//Class Begin
         boolean hasNum = false;
         boolean hasSpecial = false;
 
-        //checks for password length condition
+        //If statement checks for password length condition
         if (password.length() >= 8) {
             hasLength = true;
         }
 
-        //assigns the length of the password        
+        //assigns the length of the password to an Integer      
         int length = password.length();
 
-        //cycles through each character 
+        // for loop that cycles through each character in the password
         for (int i = 0; i < length; i++) {
 
-            //stores the character at position i 
+            //stores the character of the password at position i 
             char c = password.charAt(i);
 
             //checks and assigns true values to FLAGS if condition is TRUE
@@ -86,24 +86,26 @@ public class Login {//Class Begin
     public String registerUser(String username, String password, String fName, String lName, String cellphoneNumber) {
 
         //I am going to make use of a String builder to appened certain error messages with eachother.
-        //Initialise StringBuilder object
+        //Create StringBuilder object
         StringBuilder errorBowl = new StringBuilder();
         if (!checkUserName(username)) {
 
-            //append String to the Stringbuilder object
-            errorBowl.append(">> Username is not correctly formatted, please ensure that your username contains an underscore "
-                    + "and is no more that five characters in length<<\n");
+            //append String to the Stringbuilder object. Since the String is long, I use a String block
+            errorBowl.append("""
+                             :>> Username is not correctly formatted, please ensure that your username contains an underscore and is no more that five characters in length <<
+                             """);
 
-            //Use individual if statements to check each condition independently and allow for StringBuilder to store each error.
+            //I use individual if statements to check each condition independently and allow for StringBuilder to store each error.
         }
         if (!checkPasswordComplexity(password)) {
 
-            errorBowl.append(">>Password is not correctly formatted, please ensure that the pasword contains at least eight characters "
-                    + ", a capital letter, a number, and a special character<<\n");
+            errorBowl.append("""
+                             :>> Password is not correctly formatted, please ensure that the pasword contains at least eight characters , a capital letter, a number, and a special character <<
+                             """);
         }
         if (!checkCellPhoneNumber(cellphoneNumber)) {
 
-            errorBowl.append(">>Cellphone incorrectly formatted or does not contain international code, please correct the number and try again.<<");
+            errorBowl.append(":>> Cellphone incorrectly formatted or does not contain international code, please correct the number and try again. <<");
 
         }
         //Use StringBuilder objects length as condition to check whether or not there were errors
@@ -143,10 +145,10 @@ public class Login {//Class Begin
         //if boolean argument is true, returns a weclome message
         if (isLoggedIn) {
             return "Welcome " + firstName + " " + surname + ", it is great to see you again.";
-        //otherwise, asks the user to try again
+            //otherwise, asks the user to try again
         } else {
             return "Username or password incorrect, please try again.";
         }
     }
 
-}//Class end
+}//end of class
