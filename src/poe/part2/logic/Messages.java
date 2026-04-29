@@ -46,29 +46,30 @@ public class Messages {
             return "Invalid cellphone number.";
         }
     }
-
+    /*
+        * Processes the message metadata to generate a unique hashcode for the message with dependencies.
+        * @param msgID The unique identifier for the message, expected to be a 10-digit number.
+        * @param messageNumber The sequential number of the message being sent.
+        * @param message The text content of the message, which will be used to generate the hash.
+        * @return A formatted string containing the message hash.
+    */
     public String createMessageHash(long msgID, int messageNumber, String message) {
-        // Format the message ID as a 10-digit string so we can reliably extract the first two digits.
-        String idString = String.format("%010d", msgID);
-        // Use only the first two digits of the formatted message ID for the hash prefix.
+        String idString = String.format("%010d", msgID);//format msgID ensuring length = 10 digits, padded
         String prefix = idString.substring(0, 2);
 
-        // If the message text is null or blank, return only the prefix and message number.
         if (message == null || message.isBlank()) {
-            return String.format("%s:%d:", prefix, messageNumber);
+            return String.format("%s:%d:", prefix, messageNumber);//formatted "prefix:messageNumber:"
         }
 
         // Split the message into words using whitespace and trim any extra spaces.
+        // \\s+ is a regex that matches one or more whitespace characters(spaces, tabs, newlines).
         String[] words = message.trim().split("\\s+");
-        // The first word in the message.
         String firstWord = words[0];
-        // The last word in the message.
         String lastWord = words[words.length - 1];
-        // Combine first and last words, remove any spaces, and convert to uppercase.
-        String wordHash = (firstWord + lastWord).replaceAll("\\s+", "").toUpperCase();
-
-        // Build the final hash string in the required format.
-        return String.format("%s:%d:%s", prefix, messageNumber, wordHash);
+        String wordHash = (firstWord + lastWord).replaceAll("\\s+", "").toUpperCase();//any space repaced with empty string.
+        
+        return String.format("%s:%d:%s", prefix, messageNumber, wordHash);// formatted "prefix:messageNumber:wordHash"
+        
     }
 
 
