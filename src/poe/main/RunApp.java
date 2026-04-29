@@ -68,9 +68,32 @@ public class RunApp {
         boolean isLoggedIn = inApp.canSendMessage(finalMessage);
 
         if (isLoggedIn) {
+            System.out.println("");
             System.out.println("---Welcome to QuickChat---");
+            
+            inApp.displayOptions();
+            System.out.print("\t\tSelect Option: ");
+            System.out.println("-----------------------------------");
+            int swInput = input.nextInt();
+            
+            switch(swInput){
+                    
+                case 1:
+                    System.out.println("");
+                    
+                case 2:
+            }
+           
+
+            
+            
+            
         }
+        
+        
         input.close();
+        
+        
 
     }
 }
