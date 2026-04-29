@@ -8,10 +8,12 @@
  */
 package poe.part1.logic;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
-public class LoginTest {//start of class
+public class LoginTest {
 
     // Create one instance of Login to use for all tests
     Login login = new Login();
@@ -71,4 +73,5 @@ public class LoginTest {//start of class
         // 4. Compare them
         assertEquals(expected, actual);
     }
-}//end of class
+
+}
