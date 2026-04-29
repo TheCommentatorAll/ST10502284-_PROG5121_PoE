@@ -8,98 +8,92 @@ package poe.main;
 
 import java.util.Scanner;
 import poe.part1.logic.Login;
+import poe.part2.logic.Messages;
 
-public class RunApp {//start of class
+public class RunApp {
 
-    public static void main(String[] args) {//start of main method
-
-        //create scanner object for user input
+    public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-
         //create a login object called auth
         Login auth = new Login();
+        //create a messages object called inApp
+        Messages inApp = new Messages();
 
-        //while loop condition
-        boolean registrationStatus = false;
-        boolean loginStatus = false;
-        
-        //this do-while loop allows for the user to re-enter details if they get an error
-        do {//start of do-while
+        String finalMessage = "";
 
-            //--- REGISTRATION PHASE ---
-            System.out.println("-- REGISTER NEW ACCOUNT --");
-            System.out.print("Enter your Name: ");
-            String registerName = input.nextLine();
+        //--- REGISTRATION PHASE ---
+        System.out.println("-- REGISTER NEW ACCOUNT --");
+        System.out.print("Enter your Name: ");
+        String registerName = input.nextLine();
 
-            System.out.print(">" + "\nEnter your surname: ");
-            String registerSurname = input.nextLine();
+        System.out.print(">" + "\nEnter your surname: ");
+        String registerSurname = input.nextLine();
 
-            System.out.print(">" + "\nEnter your Username: ");
-            String registerUsername = input.nextLine();
+        System.out.print(">" + "\nEnter your Username: ");
+        String registerUsername = input.nextLine();
 
-            System.out.print(">" + "\nEnter your Password: ");
-            String registerPassword = input.nextLine();
+        System.out.print(">" + "\nEnter your Password: ");
+        String registerPassword = input.nextLine();
 
-            System.out.print(">" + "\nEnter your Cellphone Number: ");
-            String registerNumber = input.nextLine();
+        System.out.print(">" + "\nEnter your Cellphone Number: ");
+        String registerNumber = input.nextLine();
+        System.out.println("-----------------------------------");
+
+        String regStatus = auth.registerUser(registerUsername, registerPassword, registerName, registerSurname, registerNumber);
+        System.out.println(regStatus);
+
+        //Only carry onto User login if registration process was a success
+        if (regStatus.contains("registered successfully")) {
+
+            System.out.println("-----------------------------------");
+            System.out.println("-- LOGIN DETAILS --");
+            System.out.println("Your username is: " + registerUsername + "\nYour password is: " + registerPassword);
             System.out.println("-----------------------------------");
 
-            //call registerUser Method from Login.java and assign it to a String with all arguments
-            String regStatus = auth.registerUser(registerUsername, registerPassword, registerName, registerSurname, registerNumber);
+            //--- USER LOGIN PHASE ---
+            System.out.println("-- LOGIN TO ACCOUNT --");
+            System.out.print("Please enter your Username: ");
+            String username = input.nextLine();
 
-            //Only carry onto User login if registration process was a success
-            if (regStatus.contains("registered successfully")) {
+            System.out.print(">" + "\nPlease enter your Password: ");
+            String password = input.nextLine();
+            System.out.println("-----------------------------------");
 
-                //--- DISPLAY DETAILS FOR LOGIN ---
-                System.out.println(regStatus);
-                System.out.println("-----------------------------------");
-                System.out.println("-- LOGIN DETAILS --");
-                System.out.println("Your username is: " + registerUsername + "\nYour password is: " + registerPassword);
-                System.out.println("-----------------------------------");
-                
-                //i use another while loop to allow for the user to Re-enter their details in case of typing the wrong details
-                while (!loginStatus) {//Start of While Loop
-                    //--- USER LOGIN PHASE ---
-                    System.out.println("-- LOGIN TO ACCOUNT --");
-                    System.out.print("Please enter your Username: ");
-                    String username = input.nextLine();
+            boolean isSuccess = auth.loginUser(username, password);
 
-                    System.out.print(">" + "\nPlease enter your Password: ");
-                    String password = input.nextLine();
-                    System.out.println("-----------------------------------");
+            finalMessage = auth.returnLoginStatus(isSuccess);
+            System.out.println("-- STATUS --");
+            System.out.println(finalMessage);
+        }
+        boolean isLoggedIn = inApp.canSendMessage(finalMessage);
 
-                    //call on loginUser method, assign it to a boolean so we can parse it as an argument
-                    boolean isSuccess = auth.loginUser(username, password);
-
-                    //parse the boolean as an argument in the returnLoginStatus method
-                    String finalMessage = auth.returnLoginStatus(isSuccess);
-                    if (finalMessage.contains("Welcome")) {
-                        System.out.println("-- STATUS --");
-                        System.out.println(finalMessage);
-                        //end the while loop
-                        loginStatus = true;
-                    } else {
-                        System.out.println("-- STATUS --");
-                        System.out.println(finalMessage);
-                    }
-
-                }//end of While Loop
-                
-                //end the loop
-                registrationStatus = true;
-
-            } else {
-
-                System.out.println("\n[!ERROR!]\n" + regStatus);
-                System.out.println("Please try registering again.");
-
+        if (isLoggedIn) {
+            System.out.println("");
+            System.out.println("---Welcome to QuickChat---");
+            
+            inApp.displayOptions();
+            System.out.print("\t\tSelect Option: ");
+            System.out.println("-----------------------------------");
+            int swInput = input.nextInt();
+            
+            switch(swInput){
+                    
+                case 1:
+                    System.out.println("");
+                    
+                case 2:
             }
+           
 
-        } while (!registrationStatus);//end of do-while loop
-
-        //cose the Scanner object
+            
+            
+            
+        }
+        
+        
         input.close();
+        
+        
 
-    }//end of main method
-
-}//end of class
+    }
+}
