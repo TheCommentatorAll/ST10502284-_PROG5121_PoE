@@ -65,28 +65,53 @@ public class RunApp {
             System.out.println("-- STATUS --");
             System.out.println(finalMessage);
         }
-        boolean isLoggedIn = inApp.canSendMessage(finalMessage);
+
+        boolean isLoggedIn = inApp.checkSendMessage(finalMessage);
 
         if (isLoggedIn) {
             System.out.println("");
             System.out.println("---Welcome to QuickChat---");
             
             inApp.displayOptions();
-            System.out.print("\t\tSelect Option: ");
+            System.out.print("\tSelect Option: ");
             System.out.println("-----------------------------------");
-            int swInput = input.nextInt();
+            int doInput = input.nextInt();
             
+            while(doInput != 3){
+                String messageOptions = inApp.sentMessage();
+                System.out.println(messageOptions);
+                System.out.print("\tSelect Message Action: ");
+                int swInput = input.nextInt();
             switch(swInput){
                     
                 case 1:
-                    System.out.println("");
+                    System.out.print("Enter the number of messages you want to send: ");
+                    int numOfMessages = input.nextInt();
+                    input.nextLine(); 
+
+                    long msgID = inApp.generateMessageID();
+                    boolean msgIDCheck = inApp.checkMessageID(msgID);
+                    System.out.println("Generated Message ID: " + msgID);
+                    System.out.println("Message ID Valid: " + msgIDCheck);
+                    
+                    System.out.println("Please enter your message: ");
+                    String message = input.next();
+                    input.nextLine();
+                    
+                    String msgHashString = inApp.createMessageHash(msgID, numOfMessages, message);
+                    System.out.println("Message Hash: " + msgHashString);
+
+                    String storeMessageData = inApp.storeMessageAsJSON(msgID, msgHashString, registerName, message);
+                    String displayMessage = inApp.printJSONMessages();
+                    System.out.println(displayMessage);
+
+                    
                     
                 case 2:
-            }
-           
 
-            
-            
+
+            }
+      
             
         }
         
