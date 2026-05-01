@@ -13,6 +13,7 @@ import poe.part2.logic.Messages;
 public class RunApp {
 
     public static void main(String[] args) {
+        
         Scanner input = new Scanner(System.in);
         //create a login object called auth
         Login loginHandler = new Login();
@@ -33,7 +34,7 @@ public class RunApp {
             System.out.print("Enter your Name: ");
             registerName = input.nextLine();
 
-            System.out.print(">" + "\nEnter your surname: ");
+            System.out.print(">" + "\nEnter your Surname: ");
             registerSurname = input.nextLine();
 
             System.out.print(">" + "\nEnter your Username: ");
@@ -94,46 +95,117 @@ public class RunApp {
             messagingApp.displayOptions();
             System.out.print("\tSelect Option: ");
             int menuSelection = input.nextInt();
-            System.out.println("\n-----------------------------------");
+            input.nextLine();
 
-            while (menuSelection != 3) {
-                String messageOptions = messagingApp.sentMessage();
-                System.out.println(messageOptions);
-                System.out.print("\tSelect Message Action: ");
-                int messageAction = input.nextInt();
-                switch (messageAction) {
+            boolean exitApp = false;
+            while (exitApp) {
+
+                switch (menuSelection) {
 
                     case 1 -> {
-                        System.out.print("Enter the number of messages you want to send: ");
-                        int numOfMessages = input.nextInt();
-                        input.nextLine();
+                        System.out.println("You have selected: Send Messages");
+                        String messageOptions = messagingApp.sentMessage();
+                        System.out.println(messageOptions);
+                        System.out.print("\tSelect Message Action: ");
+                        int messageAction = input.nextInt();
 
-                        for (int i = 0; i < numOfMessages; i++) {
+                        switch (messageAction) {
 
-                            System.out.println("===================================");
-                            long msgID = messagingApp.generateMessageID();
-                            boolean msgIDCheck = messagingApp.checkMessageID(msgID);
-                            System.out.println("Generated Message ID: " + msgID);
-                            System.out.println("Message ID Valid: " + msgIDCheck);
-                            System.out.println("===================================");
+                            case 1 -> {
+                                System.out.print("Enter the number of messages you want to send: ");
+                                int numOfMessages = input.nextInt();
+                                input.nextLine();
 
-                            System.out.println("Please enter your message: ");
-                            String message = input.nextLine();
+                                for (int i = 0; i < numOfMessages; i++) {
 
-                            int currentMsgCount = messagingApp.incrementMessageCounter();
+                                    System.out.println("===================================");
+                                    long msgID = messagingApp.generateMessageID();
+                                    boolean msgIDCheck = messagingApp.checkMessageID(msgID);
+                                    System.out.println("Generated Message ID: " + msgID);
+                                    System.out.println("Message ID Valid: " + msgIDCheck);
+                                    System.out.println("===================================");
 
-                            String msgHashString = messagingApp.createMessageHash(msgID, currentMsgCount, message);
+                                    System.out.println("Please enter your message: ");
+                                    String message = input.nextLine();
 
-                            messagingApp.storeMessageAsJSON(msgID, msgHashString, registerName, message);
+                                    int currentMsgCount = messagingApp.incrementMessageCounter();
+
+                                    String msgHashString = messagingApp.createMessageHash(msgID, currentMsgCount, message);
+
+                                    messagingApp.storeMessageAsJSON(msgID, msgHashString, registerName, message);
+                                }
+                                System.out.println(messagingApp.printJSONMessages());
+
+                                break;
+
+                            }
+
+                            case 2 -> {
+                                System.out.println("You have selected: Store Messages");
+                                System.out.print("Enter the number of messages you want to send: ");
+                                int numOfMessages = input.nextInt();
+                                input.nextLine();
+
+                                for (int i = 0; i < numOfMessages; i++) {
+
+                                    System.out.println("===================================");
+                                    long msgID = messagingApp.generateMessageID();
+                                    boolean msgIDCheck = messagingApp.checkMessageID(msgID);
+                                    System.out.println("Generated Message ID: " + msgID);
+                                    System.out.println("Message ID Valid: " + msgIDCheck);
+                                    System.out.println("===================================");
+
+                                    System.out.println("Please enter your message: ");
+                                    String message = input.nextLine();
+
+                                    int currentMsgCount = messagingApp.incrementMessageCounter();
+
+                                    String msgHashString = messagingApp.createMessageHash(msgID, currentMsgCount, message);
+
+                                    messagingApp.storeMessageAsJSON(msgID, msgHashString, registerName, message);
+                                    System.out.println("Storing messages...");
+                                    System.out.println("Messages stored successfully.");
+                                    break;
+                                }
+
+                            }
+
+                            case 3 -> { //goes back to main menu, does not exit the app
+                                System.out.println("You have selected: Disregard");
+                                System.out.println("Returning to main menu...");
+                                break;
+                            }
+
                         }
-                        System.out.println(messagingApp.printJSONMessages());
 
                     }
 
+                    case 2 -> {
+                        System.out.println("You have selected: Show recently sent");
+                        System.out.println("Retrieving recently sent messages...");
+                        System.out.println(messagingApp.printJSONMessages());
+                        exitApp = true;
+                    }
+
+                    case 3 -> {
+                        System.out.println("You have selected: Quit");
+                        System.out.println("Exiting application...");
+                        exitApp = true;
+                    }
+
+                    default -> {
+                        System.out.println("Invalid selection, please try again.");
+                        messagingApp.displayOptions();
+                        System.out.print("\tSelect Option: ");
+                        menuSelection = input.nextInt();
+                    }
                 }
 
-
             }
+            messagingApp.displayOptions();
+            System.out.print("\tSelect Option: ");
+            menuSelection = input.nextInt();
+            input.nextLine();
             input.close();
 
         }
