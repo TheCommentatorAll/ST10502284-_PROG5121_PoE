@@ -16,9 +16,41 @@ public class Messages {
 
     private long messageID;
     private String message;
+    private String msgHashString;
     private String[] sentMessages = new String[100]; // Array to store sent messages, assuming a maximum of 100 messages
     private int globalMessageCounter = 0; // Counter to keep track of the number of messages
-    private int messageNumber = 0; // Counter for the number of messages sent, used in hash generation
+
+    public void setMessageID(long messageID) {
+        this.messageID = messageID;
+    }
+
+    public long getMessageID() {
+        return messageID;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMsgHashString(String msgHashString) {
+        this.msgHashString = msgHashString;
+    }
+
+    public String getMsgHashString() {
+        return msgHashString;
+    }
+
+    public void setGlobalMessageCounter(int globalMessageCounter) {
+        this.globalMessageCounter = globalMessageCounter;
+    }
+
+    public int getGlobalMessageCounter() {
+        return globalMessageCounter;
+    }
     /*
      * Checks if the final message contains the word "Welcome".
      * @param finalMsg The final message to check.
@@ -47,8 +79,8 @@ public class Messages {
     public String sentMessage() {
         return """
                ---Please select an option---
-               1) Send Messages
-               2) Store Messages
+               1) Send Message
+               2) Store Message
                3) Disregard""";
     }
 
@@ -124,9 +156,9 @@ public class Messages {
     }
 
     /*public String storeMessages(String message) {
-        if (messageNumber < sentMessages.length) {
-            sentMessages[messageNumber] = message;
-            messageNumber++;
+        if (globalMessageCounter < sentMessages.length) {
+            sentMessages[globalMessageCounter] = message;
+            globalMessageCounter++;
             return "Message stored successfully.";
         } else {
             return "Message storage limit reached. Cannot store more messages.";
@@ -161,20 +193,47 @@ public class Messages {
      * @param msgID The message ID.
      * @return A confirmation string.
      */
-    public String storeMessageAsJSON(long msgID, String msgHash, String recipientName, String message) {
-        if (messageNumber < sentMessages.length) {
-            String json = "{"
+    public String storeMessageRegular(long msgID, String msgHash, String recipient, String message) {
+        if (globalMessageCounter < sentMessages.length) {
+            String messageData = "{"
                     + "\"messageID\": \"" + msgID + "\", "
-                    + "\"recipient\": \"" + recipientName + "\", "
+                    + "\"recipient\": \"" + recipient + "\", "
                     + "\"message\": \"" + message + "\", "
                     + "\"messageHash\": \"" + msgHash + "\""
                     + "}";
-            sentMessages[messageNumber] = json;
-            messageNumber++;
+            sentMessages[globalMessageCounter] = messageData;
+            globalMessageCounter++;
             return "Message successfully stored as JSON.";
         } else {
             return "Message storage is full.";
         }
+    }
+
+    /*
+     * Stores a message as a JSON-formatted string inside a file named "messages.json".
+     * @param recipientName The name of the recipient.
+     * @param message The message content.
+     * @param msgHash The message hash.
+     * @param msgID The message ID.
+     * @return A confirmation string.
+     */
+    public String storeMessageAsJSON(long msgID, String msgHash, String recipient, String message) {
+
+        String json = "{\n" +
+                "  \"messageID\": \"" + msgID + "\",\n" +
+                "  \"recipient\": \"" + recipient + "\",\n" +
+                "  \"message\": \"" + message + "\",\n" +
+                "  \"messageHash\": \"" + msgHash + "\"\n" +
+                "}";
+
+                try (java.io.FileWriter file = new java.io.FileWriter("messages.json", true)) {
+                    file.write(json + ",\n");
+                    return "Message successfully stored in messages.json";
+                } catch (java.io.IOException e) {
+                    e.printStackTrace();
+                    return "An error occurred while storing the message." + e.getMessage();
+                }
+
     }
 
     /*public String printMessages(String[] messages){
@@ -183,9 +242,9 @@ public class Messages {
         }else {
         StringBuilder sb = new StringBuilder();
         sb.append("Recently sent messages:\n");
-        for (int i = 0; i < messageNumber ; i++) {
-            if (messages[i] != null) {
-                sb.append((i + 1)).append(".) ").append(messages[i]).append("\n");
+        for (int i = 0; i < globalMessageCounter ; i++) {
+            if (sentMessages[i] != null) {
+                sb.append((i + 1)).append(".) ").append(sentMessages[i]).append("\n");
             }
         }
         return sb.toString();
@@ -195,15 +254,15 @@ public class Messages {
      * Prints the stored messages in JSON format.
      * @return A formatted string of all stored messages in JSON.
      */
-    public String printJSONMessages() {
-        if (messageNumber == 0) {
+    public String printMessages() {
+        if (globalMessageCounter == 0) {
             return "No messages stored yet.";
         }
         StringBuilder storedMessages = new StringBuilder();
         storedMessages.append("[\n");
-        for (int i = 0; i < messageNumber; i++) {
+        for (int i = 0; i < globalMessageCounter; i++) {
             storedMessages.append("  ").append(sentMessages[i]);
-            if (i < messageNumber - 1) {
+            if (i < globalMessageCounter - 1) {
                 storedMessages.append(",");
             }
             storedMessages.append("\n");
