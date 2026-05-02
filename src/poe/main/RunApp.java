@@ -10,9 +10,9 @@ import java.util.Scanner;
 import poe.part1.logic.Login;
 import poe.part2.logic.Messages;
 
-public class RunApp {
+public class RunApp {//start of class
 
-    public static void main(String[] args) {
+    public static void main(String[] args) {//start of main method
 
         Scanner input = new Scanner(System.in);
         //create a login object called auth
@@ -91,12 +91,17 @@ public class RunApp {
         if (isLoggedIn) {
             System.out.println("");
             System.out.println("---Welcome to QuickChat---");
+            messagingApp.displayOptions();
+                System.out.print("\tSelect Option: ");
+                int menuSelection = input.nextInt();
+                input.nextLine();
 
             boolean runApp = true;
             while (runApp) {
+                System.out.println(">>QuickChat Menu<<");
                 messagingApp.displayOptions();
                 System.out.print("\tSelect Option: ");
-                int menuSelection = input.nextInt();
+                menuSelection = input.nextInt();
                 input.nextLine();
 
                 switch (menuSelection) {
@@ -111,6 +116,11 @@ public class RunApp {
 
                         for (int i = 0; i < numOfMessages; i++) {
 
+                            System.out.println("Please enter your message: ");
+                            System.out.print(":$>> ");
+                            String message = input.nextLine();
+                            messagingApp.setMessage(message);
+
                             System.out.println("===================================");
                             long msgID = messagingApp.generateMessageID();
                             messagingApp.setMessageID(msgID);
@@ -119,10 +129,6 @@ public class RunApp {
                             System.out.println("Message ID Valid: " + msgIDCheck);
                             System.out.println("===================================");
 
-                            System.out.print("Please enter your message:> ");
-                            String message = input.nextLine();
-                            messagingApp.setMessage(message);
-
                             int currentMsgCount = messagingApp.incrementMessageCounter();
                             messagingApp.setGlobalMessageCounter(currentMsgCount);
 
@@ -130,6 +136,8 @@ public class RunApp {
 
                             messagingApp.storeMessageRegular(msgID, msgHashString, registerNumber, message);
                         }
+                        System.out.println("===================================");
+
 
                         System.out.println(messagingApp.sentMessage());
                         System.out.print("\tSelect Message Action: ");
@@ -167,6 +175,8 @@ public class RunApp {
                         System.out.println("You have selected: Show recently sent");
                         System.out.println("Retrieving recently sent messages...");
                         System.out.println(messagingApp.printMessages());
+                        System.out.println("Total messages sent: " + messagingApp.getGlobalMessageCounter());
+
                     }
 
                     case 3 -> {
@@ -188,5 +198,5 @@ public class RunApp {
 
         }
 
-    }
-}
+    }//end of main method
+}//end of class

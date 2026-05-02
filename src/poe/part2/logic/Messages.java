@@ -175,7 +175,7 @@ public class Messages {
     * Date: 30 April 2026
     * Prompt used: "I need a method in the Messages class to store messages in JSON,
     *               including the recipient's name"
-    *
+    * Reference:
     * Anthropic, 2026. Claude Sonnet 4.6 [Large Language Model]. 
     * Available at: https://claude.ai [Accessed 30 April 2026].
     *
@@ -195,14 +195,13 @@ public class Messages {
      */
     public String storeMessageRegular(long msgID, String msgHash, String recipient, String message) {
         if (globalMessageCounter < sentMessages.length) {
-            String messageData = "{"
+            String messageData = "{\n"
                     + "\"messageID\": \"" + msgID + "\", "
                     + "\"recipient\": \"" + recipient + "\", "
                     + "\"message\": \"" + message + "\", "
                     + "\"messageHash\": \"" + msgHash + "\""
                     + "}";
             sentMessages[globalMessageCounter] = messageData;
-            globalMessageCounter++;
             return "Message successfully stored as JSON.";
         } else {
             return "Message storage is full.";
