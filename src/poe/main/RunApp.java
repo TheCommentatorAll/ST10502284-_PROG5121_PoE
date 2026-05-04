@@ -7,6 +7,7 @@
 package poe.main;
 
 import java.util.Scanner;
+import poe.files.FileManager;
 import poe.part1.logic.Login;
 import poe.part2.logic.Messages;
 
@@ -15,10 +16,9 @@ public class RunApp {//start of class
     public static void main(String[] args) {//start of main method
 
         Scanner input = new Scanner(System.in);
-        //create a login object called auth
         Login loginHandler = new Login();
-        //create a messages object called inApp
         Messages messagingApp = new Messages();
+        FileManager fileManager = new FileManager();
 
         String finalMessage = "";
         String registerName = "";
@@ -26,6 +26,7 @@ public class RunApp {//start of class
         String registerUsername = "";
         String registerPassword = "";
         String registerNumber = "";
+
 
         //--- REGISTRATION PHASE ---
         boolean registered = false;
@@ -52,6 +53,7 @@ public class RunApp {//start of class
 
             if (regStatus.contains("registered successfully")) {
                 registered = true;
+                fileManager.saveRegisteredUser(registerName, registerSurname, registerUsername, registerPassword, registerNumber);
                 System.out.println("-----------------------------------");
                 System.out.println("-- LOGIN DETAILS --");
                 System.out.println("Your username is: " + registerUsername + "\nYour password is: " + registerPassword);
@@ -86,22 +88,15 @@ public class RunApp {//start of class
             }
         }
 
-        boolean isLoggedIn = messagingApp.checkSendMessage(finalMessage);
-
-        if (isLoggedIn) {
-            System.out.println("");
-            System.out.println("---Welcome to QuickChat---");
-            messagingApp.displayOptions();
-                System.out.print("\tSelect Option: ");
-                int menuSelection = input.nextInt();
-                input.nextLine();
+        if (loggedIn) {
 
             boolean runApp = true;
             while (runApp) {
-                System.out.println(">>QuickChat Menu<<");
+                System.out.println("");
+                System.out.println("---Welcome to QuickChat---");
                 messagingApp.displayOptions();
                 System.out.print("\tSelect Option: ");
-                menuSelection = input.nextInt();
+                int menuSelection = input.nextInt();
                 input.nextLine();
 
                 switch (menuSelection) {
@@ -133,11 +128,10 @@ public class RunApp {//start of class
                             messagingApp.setGlobalMessageCounter(currentMsgCount);
 
                             String msgHashString = messagingApp.createMessageHash(msgID, currentMsgCount, message);
+                            messagingApp.setMsgHashString(msgHashString);
 
                             messagingApp.storeMessageRegular(msgID, msgHashString, registerNumber, message);
                         }
-                        System.out.println("===================================");
-
 
                         System.out.println(messagingApp.sentMessage());
                         System.out.print("\tSelect Message Action: ");
@@ -147,7 +141,7 @@ public class RunApp {//start of class
 
                             case 1 -> {
                                 System.out.println("You have selected: Send Message");
-                                System.out.println("Sending messages..."); 
+                                System.out.println("Sending messages...");
                                 System.out.println("Messages sent successfully!");
 
                                 System.out.println(messagingApp.printMessages());

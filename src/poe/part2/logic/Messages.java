@@ -51,15 +51,6 @@ public class Messages {
     public int getGlobalMessageCounter() {
         return globalMessageCounter;
     }
-    /*
-     * Checks if the final message contains the word "Welcome".
-     * @param finalMsg The final message to check.
-     * @return true if the message contains "Welcome", false otherwise.
-     */
-    public boolean checkSendMessage(String finalMsg) {
-
-        return finalMsg.contains("Welcome");
-    }
 
     /*
      * Displays the available options to the user.
