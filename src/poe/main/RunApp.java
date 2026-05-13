@@ -2,7 +2,7 @@
  * Student Name: Nicholas Morris
  * Student Number: ST10502284
  * Assignment: PROG5121 PoE Part 1 - Registration and Login
- * Description: This class handles user input and method calling
+ * Description: Main Class that runs the application, handles user input and output, and calls the necessary methods from the Login and Messages classes
  */
 package poe.main;
 
@@ -126,11 +126,11 @@ public class RunApp {//start of class
 
                             int currentMsgCount = messagingApp.incrementMessageCounter();
                             messagingApp.setGlobalMessageCounter(currentMsgCount);
-
+                            
                             String msgHashString = messagingApp.createMessageHash(msgID, currentMsgCount, message);
                             messagingApp.setMsgHashString(msgHashString);
 
-                            messagingApp.storeMessageRegular(msgID, msgHashString, registerNumber, message);
+                            messagingApp.storeMessageAsRegular(msgID, msgHashString, registerNumber, message);
                         }
 
                         System.out.println(messagingApp.sentMessage());

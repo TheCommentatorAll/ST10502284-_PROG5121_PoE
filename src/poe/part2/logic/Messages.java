@@ -184,15 +184,16 @@ public class Messages {
      * @param msgID The message ID.
      * @return A confirmation string.
      */
-    public String storeMessageRegular(long msgID, String msgHash, String recipient, String message) {
-        if (globalMessageCounter < sentMessages.length) {
+    public String storeMessageAsRegular(long msgID, String msgHash, String recipient, String message) {
+        int storedMessageCount = globalMessageCounter - 1;
+        if (storedMessageCount >= 0 && storedMessageCount < sentMessages.length) {
             String messageData = "{\n"
                     + "\"messageID\": \"" + msgID + "\", "
                     + "\"recipient\": \"" + recipient + "\", "
                     + "\"message\": \"" + message + "\", "
                     + "\"messageHash\": \"" + msgHash + "\""
                     + "}";
-            sentMessages[globalMessageCounter] = messageData;
+            sentMessages[storedMessageCount] = messageData;
             return "Message successfully stored as JSON.";
         } else {
             return "Message storage is full.";
