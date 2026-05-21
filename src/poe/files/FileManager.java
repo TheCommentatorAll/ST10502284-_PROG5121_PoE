@@ -12,7 +12,17 @@ public class FileManager {
 
     private static final String STRING_REGEX = "\\[\\]";
 
-    public String saveRegisteredUser (String username, String password, String name, String surname, String cellNumber) {
+
+    /*
+     * Saves a new registered user to the file.
+     * @param name The user's name.
+     * @param surname The user's surname.
+     * @param username The user's username.
+     * @param password The user's password.
+     * @param cellNumber The user's cell phone number.
+     * @return A message indicating the result of the operation.
+     */
+    public String saveRegisteredUser (String name, String surname, String username, String password, String cellNumber) {
 
         // Create a string to save to the file
         String userData = username + DELIMITER 
@@ -31,6 +41,13 @@ public class FileManager {
         }
     }
 
+    /*
+     * Reads the registered user data from the file.
+     * @param username The user's username.
+     * @param password The user's password.
+     * @return An array containing the user's data, or null if not found.
+     * @throws IOException If an error occurs while reading the file.
+     */
     public String[] readRegisteredUsers(String username, String password) throws IOException {
 
          try(BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
@@ -53,6 +70,13 @@ public class FileManager {
 
     }
 
+    /*
+     * Checks if a user exists in the file.
+     * @param username The user's username.
+     * @param password The user's password.
+     * @return true if the user exists, false otherwise.
+     * @throws IOException If an error occurs while reading the file.
+     */
     public boolean userExists(String username, String password) throws IOException{
         return readRegisteredUsers(username, password) != null;
     }

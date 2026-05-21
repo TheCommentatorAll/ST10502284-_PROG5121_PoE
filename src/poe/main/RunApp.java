@@ -6,6 +6,7 @@
  */
 package poe.main;
 
+import java.io.IOException;
 import java.util.Scanner;
 import poe.files.FileManager;
 import poe.part1.logic.Login;
@@ -13,7 +14,7 @@ import poe.part2.logic.Messages;
 
 public class RunApp {//start of class
 
-    public static void main(String[] args) {//start of main method
+    public static void main(String[] args) throws IOException { //start of main method
 
         Scanner input = new Scanner(System.in);
         Login loginHandler = new Login();
@@ -27,46 +28,102 @@ public class RunApp {//start of class
         String registerPassword = "";
         String registerNumber = "";
 
-        //--- REGISTRATION PHASE ---
-        boolean registered = false;
-        while (!registered) {
-            System.out.println("-- REGISTER NEW ACCOUNT --");
-            System.out.print("Enter your Name: ");
-            registerName = input.nextLine();
+        boolean loggedIn = false;
 
-            System.out.print(">" + "\nEnter your Surname: ");
-            registerSurname = input.nextLine();
+        // -- Application Start --
+        System.out.println("-- WELCOME TO QUICKCHAT --");
+        System.out.println("1) Register new account");
+        System.out.println("2) Login with existing account");
+        System.out.print("Select an option: ");
+        int startChoice = input.nextInt();
+        input.nextLine();
+        System.out.println("-----------------------------------");
 
-            System.out.print(">" + "\nEnter your Username: ");
-            registerUsername = input.nextLine();
+        // user registration path
+        if (startChoice == 1) {
 
-            System.out.print(">" + "\nEnter your Password: ");
-            registerPassword = input.nextLine();
+            boolean registered = false;
+            while (!registered) {
+                System.out.println("-- REGISTER NEW ACCOUNT --");
+                System.out.print("Enter your Name: ");
+                registerName = input.nextLine();
 
-            System.out.print(">" + "\nEnter your Cellphone Number: ");
-            registerNumber = input.nextLine();
-            System.out.println("-----------------------------------");
+                System.out.print(">" + "\nEnter your Surname: ");
+                registerSurname = input.nextLine();
 
-            String regStatus = loginHandler.registerUser(registerUsername, registerPassword, registerName, registerSurname, registerNumber);
-            System.out.println(regStatus);
+                System.out.print(">" + "\nEnter your Username: ");
+                registerUsername = input.nextLine();
 
-            if (regStatus.contains("registered successfully")) {
-                registered = true;
+                System.out.print(">" + "\nEnter your Password: ");
+                registerPassword = input.nextLine();
 
-                fileManager.saveRegisteredUser(registerName, registerSurname, registerUsername, registerPassword, registerNumber);
-
+                System.out.print(">" + "\nEnter your Cellphone Number: ");
+                registerNumber = input.nextLine();
                 System.out.println("-----------------------------------");
-                System.out.println("-- LOGIN DETAILS --");
-                System.out.println("Your username is: " + registerUsername + "\nYour password is: " + registerPassword);
-                System.out.println("-----------------------------------");
-            } else {
-                System.out.println("Registration failed. Please try again.");
-                System.out.println("-----------------------------------");
+
+                String regStatus = loginHandler.registerUser(registerUsername, registerPassword, registerName, registerSurname, registerNumber);
+                System.out.println(regStatus);
+
+                if (regStatus.contains("registered successfully")) {
+                    registered = true;
+
+                    // FIXED argument order to match saveRegisteredUser(username, password, name, surname, cell)
+                    fileManager.saveRegisteredUser(registerUsername, registerPassword,registerName, registerSurname, registerNumber);
+
+                    System.out.println("-----------------------------------");
+                    System.out.println("-- LOGIN DETAILS --");
+                    System.out.println("Your username is: " + registerUsername);
+                    System.out.println("Your password is: " + registerPassword);
+                    System.out.println("-----------------------------------");
+                } else {
+                    System.out.println("Registration failed. Please try again.");
+                    System.out.println("-----------------------------------");
+                }
             }
+
+        } else if (startChoice == 2) {
+
+            boolean foundInFile = false;
+            while (!foundInFile) {
+                System.out.println("-- LOGIN WITH EXISTING ACCOUNT --");
+                System.out.print("Enter your Username: ");
+                String enteredUsername = input.nextLine();
+
+                System.out.print("Enter your Password: ");
+                String enteredPassword = input.nextLine();
+                System.out.println("-----------------------------------");
+
+                if (fileManager.userExists(enteredUsername, enteredPassword)) {
+
+                    String[] userData = fileManager.readRegisteredUsers(enteredUsername, enteredPassword);
+
+                    // Rehydrate the Login object so returnLoginStatus() has firstName/surname
+                    // userData: [0]=username [1]=password [2]=name [3]=surname [4]=cellNumber
+                    loginHandler.registerUser(userData[0], userData[1], userData[2], userData[3], userData[4]);
+
+                    registerUsername = userData[0];
+                    registerPassword = userData[1];
+                    registerName = userData[2];
+                    registerSurname = userData[3];
+                    registerNumber = userData[4];
+
+                    foundInFile = true;
+                    System.out.println("Account found!");
+                    System.out.println("-----------------------------------");
+                    loggedIn = loginHandler.loginUser(registerUsername, registerPassword);
+
+                } else {
+                    System.out.println("No matching account found. Please try again.");
+                    System.out.println("-----------------------------------");
+                }
+            }
+
+        } else {
+            System.out.println("Invalid option. Restarting...");
+            return;
         }
 
         //--- USER LOGIN PHASE ---
-        boolean loggedIn = false;
         while (!loggedIn) {
             System.out.println("-- LOGIN TO ACCOUNT --");
             System.out.print("Please enter your Username: ");
@@ -202,5 +259,7 @@ public class RunApp {//start of class
 
         }
 
-    }//end of main method
-}//end of class
+    }
+}
+//end of main method
+//end of class
