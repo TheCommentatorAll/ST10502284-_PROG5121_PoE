@@ -1,5 +1,4 @@
 /*
- * 
  *-------------------------------------------------------------------------
  * File: Messages.java
  * Developer: Nicholas Morris
@@ -50,15 +49,6 @@ public class Messages {
 
     public int getGlobalMessageCounter() {
         return globalMessageCounter;
-    }
-    /*
-     * Checks if the final message contains the word "Welcome".
-     * @param finalMsg The final message to check.
-     * @return true if the message contains "Welcome", false otherwise.
-     */
-    public boolean checkSendMessage(String finalMsg) {
-
-        return finalMsg.contains("Welcome");
     }
 
     /*
@@ -117,14 +107,23 @@ public class Messages {
         }
     }
 
-    public void checkMessageLength(String message) {
+    /*
+     * Checks if the message length is valid.
+     * @param message The message to check.
+     * @return true if the message length is valid, false otherwise.
+     */
+    public boolean checkMessageLength(String message) {
         if (message.length() > 250) {
-            System.out.println("Message exceeds the maximum length of 250 characters.");
+            return false;
         } else {
-            System.out.println("Message length is valid.");
+            return true;
         }
     }
 
+    /*
+     * Increments the global message counter.
+     * @return The updated message counter.
+     */
     public int incrementMessageCounter() {
         return ++globalMessageCounter;
     }
@@ -155,17 +154,7 @@ public class Messages {
 
     }
 
-    /*public String storeMessages(String message) {
-        if (globalMessageCounter < sentMessages.length) {
-            sentMessages[globalMessageCounter] = message;
-            globalMessageCounter++;
-            return "Message stored successfully.";
-        } else {
-            return "Message storage limit reached. Cannot store more messages.";
-        }
-    }*/
-
-/*
+    /*
     * METHOD: storeMessageAsJSON()
     * This method was generated with AI assistance.
     *
@@ -184,8 +173,8 @@ public class Messages {
     * (msgID, msgHash) and array storage pattern consistent with project structure.
      */
 
-    /*
-     * Stores a message as a JSON-formatted string.
+ /*
+     * Stores a message as a JSON-formatted string to display in the console and also saves it in the sentMessages array.
      * Generated with AI assistance (Claude, Anthropic, 2026)
      * @param recipientName The name of the recipient.
      * @param message The message content.
@@ -193,15 +182,16 @@ public class Messages {
      * @param msgID The message ID.
      * @return A confirmation string.
      */
-    public String storeMessageRegular(long msgID, String msgHash, String recipient, String message) {
-        if (globalMessageCounter < sentMessages.length) {
-            String messageData = "{\n"
+    public String storeMessageAsRegular(long msgID, String msgHash, String recipient, String message) {
+        int storedMessageCount = globalMessageCounter - 1;
+        if (storedMessageCount >= 0 && storedMessageCount < sentMessages.length) {
+            String messageData = "{"
                     + "\"messageID\": \"" + msgID + "\", "
                     + "\"recipient\": \"" + recipient + "\", "
                     + "\"message\": \"" + message + "\", "
                     + "\"messageHash\": \"" + msgHash + "\""
                     + "}";
-            sentMessages[globalMessageCounter] = messageData;
+            sentMessages[storedMessageCount] = messageData;
             return "Message successfully stored as JSON.";
         } else {
             return "Message storage is full.";
@@ -218,39 +208,35 @@ public class Messages {
      */
     public String storeMessageAsJSON(long msgID, String msgHash, String recipient, String message) {
 
-        String json = "{\n" +
-                "  \"messageID\": \"" + msgID + "\",\n" +
-                "  \"recipient\": \"" + recipient + "\",\n" +
-                "  \"message\": \"" + message + "\",\n" +
-                "  \"messageHash\": \"" + msgHash + "\"\n" +
-                "}";
+        // Build one complete JSON array from everything in sentMessages[]
+        StringBuilder jsonArray = new StringBuilder();
+        jsonArray.append("[\n");
 
-                try (java.io.FileWriter file = new java.io.FileWriter("messages.json", true)) {
-                    file.write(json + ",\n");
-                    return "Message successfully stored in messages.json";
-                } catch (java.io.IOException e) {
-                    e.printStackTrace();
-                    return "An error occurred while storing the message." + e.getMessage();
+        int written = 0; // track how many valid entries we've written
+        for (int i = 0; i < globalMessageCounter; i++) {
+            if (sentMessages[i] != null) {
+                if (written > 0) {
+                    jsonArray.append(",\n"); // comma BETWEEN objects, not after the last one
                 }
+                jsonArray.append("  ").append(sentMessages[i]); // append the JSON object from sentMessages[]
+                written++;
+            }
+        }
+
+        jsonArray.append("]");
+
+        try (java.io.FileWriter file = new java.io.FileWriter("messages.json", false)) {//false to overwrite each time
+            file.write(jsonArray.toString()); 
+            return "Message successfully stored in messages.json";
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            return "An error occurred while storing the message." + e.getMessage();
+        }
 
     }
 
-    /*public String printMessages(String[] messages){
-        if (messages == null || messages.length == 0) {
-            return "No messages to display.";
-        }else {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Recently sent messages:\n");
-        for (int i = 0; i < globalMessageCounter ; i++) {
-            if (sentMessages[i] != null) {
-                sb.append((i + 1)).append(".) ").append(sentMessages[i]).append("\n");
-            }
-        }
-        return sb.toString();
-    }*/
-
- /*
-     * Prints the stored messages in JSON format.
+    /*
+     * Prints the stored messages in JSON formatted string.
      * @return A formatted string of all stored messages in JSON.
      */
     public String printMessages() {

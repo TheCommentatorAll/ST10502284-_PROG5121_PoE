@@ -2,11 +2,12 @@
  * Student Name: Nicholas Morris
  * Student Number: ST10502284
  * Assignment: PROG5121 PoE Part 1 - Registration and Login
- * Description: This class handles user input and method calling
+ * Description: Main Class that runs the application, handles user input and output, and calls the necessary methods from the Login and Messages classes
  */
 package poe.main;
 
 import java.util.Scanner;
+import poe.files.FileManager;
 import poe.part1.logic.Login;
 import poe.part2.logic.Messages;
 
@@ -15,10 +16,9 @@ public class RunApp {//start of class
     public static void main(String[] args) {//start of main method
 
         Scanner input = new Scanner(System.in);
-        //create a login object called auth
         Login loginHandler = new Login();
-        //create a messages object called inApp
-        Messages messagingApp = new Messages();
+        Messages messageHandler = new Messages();
+        FileManager fileManager = new FileManager();
 
         String finalMessage = "";
         String registerName = "";
@@ -52,6 +52,9 @@ public class RunApp {//start of class
 
             if (regStatus.contains("registered successfully")) {
                 registered = true;
+
+                fileManager.saveRegisteredUser(registerName, registerSurname, registerUsername, registerPassword, registerNumber);
+
                 System.out.println("-----------------------------------");
                 System.out.println("-- LOGIN DETAILS --");
                 System.out.println("Your username is: " + registerUsername + "\nYour password is: " + registerPassword);
@@ -86,22 +89,17 @@ public class RunApp {//start of class
             }
         }
 
-        boolean isLoggedIn = messagingApp.checkSendMessage(finalMessage);
-
-        if (isLoggedIn) {
-            System.out.println("");
-            System.out.println("---Welcome to QuickChat---");
-            messagingApp.displayOptions();
-                System.out.print("\tSelect Option: ");
-                int menuSelection = input.nextInt();
-                input.nextLine();
+        if (loggedIn) {
 
             boolean runApp = true;
             while (runApp) {
-                System.out.println(">>QuickChat Menu<<");
-                messagingApp.displayOptions();
+                System.out.println("");
+                System.out.println("---Welcome to QuickChat---");
+
+                messageHandler.displayOptions();
                 System.out.print("\tSelect Option: ");
-                menuSelection = input.nextInt();
+
+                int menuSelection = input.nextInt();
                 input.nextLine();
 
                 switch (menuSelection) {
@@ -119,27 +117,31 @@ public class RunApp {//start of class
                             System.out.println("Please enter your message: ");
                             System.out.print(":$>> ");
                             String message = input.nextLine();
-                            messagingApp.setMessage(message);
+                            messageHandler.setMessage(message);
+
+                            if (!messageHandler.checkMessageLength(message)) {
+                                System.out.println("!!Invalid message length. Please try again. Must be less than 250 characters!!");
+                                i--; // Decrement i to retry the same iteration
+                                continue; //bypasses code executed after this check and goes to the next loop iteration, which is the same one since i was decremented
+                            }
 
                             System.out.println("===================================");
-                            long msgID = messagingApp.generateMessageID();
-                            messagingApp.setMessageID(msgID);
-                            boolean msgIDCheck = messagingApp.checkMessageID(msgID);
+                            long msgID = messageHandler.generateMessageID();
+                            messageHandler.setMessageID(msgID);
+                            boolean msgIDCheck = messageHandler.checkMessageID(msgID);
                             System.out.println("Generated Message ID: " + msgID);
                             System.out.println("Message ID Valid: " + msgIDCheck);
                             System.out.println("===================================");
 
-                            int currentMsgCount = messagingApp.incrementMessageCounter();
-                            messagingApp.setGlobalMessageCounter(currentMsgCount);
+                            int currentMsgCount = messageHandler.incrementMessageCounter();
+                            messageHandler.setGlobalMessageCounter(currentMsgCount);
 
-                            String msgHashString = messagingApp.createMessageHash(msgID, currentMsgCount, message);
+                            String msgHashString = messageHandler.createMessageHash(msgID, currentMsgCount, message);
+                            messageHandler.setMsgHashString(msgHashString);
 
-                            messagingApp.storeMessageRegular(msgID, msgHashString, registerNumber, message);
                         }
-                        System.out.println("===================================");
 
-
-                        System.out.println(messagingApp.sentMessage());
+                        System.out.println(messageHandler.sentMessage());
                         System.out.print("\tSelect Message Action: ");
                         int messageAction = input.nextInt();
 
@@ -147,17 +149,19 @@ public class RunApp {//start of class
 
                             case 1 -> {
                                 System.out.println("You have selected: Send Message");
-                                System.out.println("Sending messages..."); 
+                                System.out.println("Sending messages...");
                                 System.out.println("Messages sent successfully!");
 
-                                System.out.println(messagingApp.printMessages());
-                                System.out.println("Total messages sent: " + messagingApp.getGlobalMessageCounter());
+                                messageHandler.storeMessageAsRegular(messageHandler.getMessageID(), messageHandler.getMsgHashString(), registerNumber, messageHandler.getMessage());
+
+                                System.out.println(messageHandler.printMessages());
+                                System.out.println("Total messages sent: " + messageHandler.getGlobalMessageCounter());
 
                             }
 
                             case 2 -> {
                                 System.out.println("You have selected: Store Messages");
-                                messagingApp.storeMessageAsJSON(messagingApp.getMessageID(), messagingApp.getMsgHashString(), registerNumber, messagingApp.getMessage());
+                                messageHandler.storeMessageAsJSON(messageHandler.getMessageID(), messageHandler.getMsgHashString(), registerNumber, messageHandler.getMessage());
                                 System.out.println("Message stored successfully!");
 
                             }
@@ -174,8 +178,8 @@ public class RunApp {//start of class
                     case 2 -> {
                         System.out.println("You have selected: Show recently sent");
                         System.out.println("Retrieving recently sent messages...");
-                        System.out.println(messagingApp.printMessages());
-                        System.out.println("Total messages sent: " + messagingApp.getGlobalMessageCounter());
+                        System.out.println(messageHandler.printMessages());
+                        System.out.println("Total messages sent: " + messageHandler.getGlobalMessageCounter());
 
                     }
 
@@ -187,7 +191,7 @@ public class RunApp {//start of class
 
                     default -> {
                         System.out.println("Invalid selection, please try again.");
-                        messagingApp.displayOptions();
+                        messageHandler.displayOptions();
                         System.out.print("\tSelect Option: ");
                         menuSelection = input.nextInt();
                     }
