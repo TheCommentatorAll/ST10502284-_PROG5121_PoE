@@ -8,9 +8,9 @@ public class FileManager {
 
     private static final String FILE_PATH = "users.txt";
 
-    private static final String DELIMITER = ":$:";
+    private static final String DELIMITER = "[]";
 
-    private static final String STRING_REGEX = ":\\$:";
+    private static final String STRING_REGEX = "\\[\\]";
 
     public String saveRegisteredUser (String username, String password, String name, String surname, String cellNumber) {
 
