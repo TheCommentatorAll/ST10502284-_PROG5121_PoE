@@ -75,6 +75,30 @@ public class Messages {
     }
 
     /*
+     * Returns a message indicating the message has been sent.
+     * @return A formatted string indicating the message has been sent.
+     */
+    public String messageSent() {
+        return "Message successfully sent.";
+    }
+
+    /*
+     * Returns a message indicating the user has chosen to disregard the message.
+     * @return A formatted string indicating the message has been disregarded.
+     */
+    public String messageDisregarded() {
+        return "Press 0 to delete message.";
+    }
+
+    /*
+     * Returns a message indicating the message has been stored.
+     * @return A formatted string indicating the message has been stored.
+     */
+    public String messageStored() {
+        return "Message successfully stored.";
+    }
+
+    /*
      * Generates a unique message ID.
      * @return A randomly generated 10-digit message ID.
      */
@@ -101,22 +125,23 @@ public class Messages {
      */
     public String checkRecipientCell(String cellNum) {
         if (cellNum.matches("^\\+27\\d{9}$")) {
-            return "Cellphone number is valid: " + cellNum;
+            return "Cell phone number successfully captured.";
         } else {
-            return "Invalid cellphone number.";
+            return "Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
         }
     }
 
     /*
      * Checks if the message length is valid.
      * @param message The message to check.
-     * @return true if the message length is valid, false otherwise.
+     * @return A message indicating whether the message length is valid.
      */
-    public boolean checkMessageLength(String message) {
+    public String checkMessageLength(String message) {
         if (message.length() > 250) {
-            return false;
+            int over = message.length() - 250;
+            return "Message exceeds 250 characters by " + over + ", please reduce size.";
         } else {
-            return true;
+            return "Message ready to send.";
         }
     }
 
@@ -226,7 +251,7 @@ public class Messages {
         jsonArray.append("]");
 
         try (java.io.FileWriter file = new java.io.FileWriter("messages.json", false)) {//false to overwrite each time
-            file.write(jsonArray.toString()); 
+            file.write(jsonArray.toString());
             return "Message successfully stored in messages.json";
         } catch (java.io.IOException e) {
             e.printStackTrace();

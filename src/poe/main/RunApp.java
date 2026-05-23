@@ -68,7 +68,7 @@ public class RunApp {//start of class
                     registered = true;
 
                     // FIXED argument order to match saveRegisteredUser(username, password, name, surname, cell)
-                    fileManager.saveRegisteredUser(registerUsername, registerPassword,registerName, registerSurname, registerNumber);
+                    fileManager.saveRegisteredUser(registerUsername, registerPassword, registerName, registerSurname, registerNumber);
 
                     System.out.println("-----------------------------------");
                     System.out.println("-- LOGIN DETAILS --");
@@ -174,13 +174,18 @@ public class RunApp {//start of class
                             System.out.println("Please enter your message: ");
                             System.out.print(":$>> ");
                             String message = input.nextLine();
+
                             messageHandler.setMessage(message);
 
-                            if (!messageHandler.checkMessageLength(message)) {
-                                System.out.println("!!Invalid message length. Please try again. Must be less than 250 characters!!");
+                            String lengthCheck = messageHandler.checkMessageLength(message);
+                        
+                            if (!lengthCheck.equals("Message ready to send.")) {
+                                System.out.println(lengthCheck);
                                 i--; // Decrement i to retry the same iteration
                                 continue; //bypasses code executed after this check and goes to the next loop iteration, which is the same one since i was decremented
                             }
+
+                            System.out.println(lengthCheck);
 
                             System.out.println("===================================");
                             long msgID = messageHandler.generateMessageID();
