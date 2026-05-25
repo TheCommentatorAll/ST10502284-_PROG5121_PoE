@@ -16,9 +16,6 @@ public class MessagesTest {//start of class
 
     Messages msg = new Messages();
 
-    // -------------------------------------------------------
-    // TEST: checkMessageLength()
-    // -------------------------------------------------------
     @Test
     public void testMessageLengthSuccess() {
         // A short message should return the success string
@@ -35,9 +32,6 @@ public class MessagesTest {//start of class
         assertEquals(expected, msg.checkMessageLength(longMsg));
     }
 
-    // -------------------------------------------------------
-    // TEST: checkRecipientCell()
-    // -------------------------------------------------------
     @Test
     public void testRecipientCellSuccess() {
         // +27718693002 is valid — starts with +27 and has 9 digits after
@@ -52,33 +46,15 @@ public class MessagesTest {//start of class
         assertEquals("Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.", result);
     }
 
-    // -------------------------------------------------------
-    // TEST: createMessageHash()
-    // -------------------------------------------------------
     @Test
     public void testMessageHashTestCase1() {
-        /*
-         * Logic walkthrough:
-         * msgID = any 10-digit number starting with "00..." — we use 0000000001
-         * BUT generateMessageID() is random, so we pass a FIXED ID for testing.
-         * 
-         * For the hash "00:0:HITONIGHT":
-         *   prefix = first 2 digits of the ID = "00"
-         *   messageNumber = 0
-         *   message = "Hi Mike, can you join us for dinner tonight"
-         *   firstWord = "Hi", lastWord = "tonight"
-         *   wordHash = ("Hi" + "tonight").toUpperCase() = "HITONIGHT"
-         *   result = "00:0:HITONIGHT"
-         */
+        
         long fixedID = 0000000001L; // prefix will be "00"
         String result = msg.createMessageHash(fixedID, 0, "Hi Mike, can you join us for dinner tonight");
         assertEquals("00:0:HITONIGHT", result);
         System.out.println("Message Hash generated: " + result);
     }
 
-    // -------------------------------------------------------
-    // TEST: generateMessageID() and checkMessageID()
-    // -------------------------------------------------------
     @Test
     public void testMessageIDIsValid() {
         // Generate a random ID and verify it falls in the valid 10-digit range
@@ -87,9 +63,6 @@ public class MessagesTest {//start of class
         System.out.println("Message ID generated: " + id);
     }
 
-    // -------------------------------------------------------
-    // TEST: messageSent / messageDisregarded / messageStored
-    // -------------------------------------------------------
     @Test
     public void testMessageSentAction() {
         assertEquals("Message successfully sent.", msg.messageSent());

@@ -43,6 +43,8 @@ public class RunApp {//start of class
         if (startChoice == 1) {
 
             boolean registered = false;
+            // Loop until the user successfully registers
+            // This allows them to correct any input errors without restarting the app
             while (!registered) {
                 System.out.println("-- REGISTER NEW ACCOUNT --");
                 System.out.print("Enter your Name: ");
@@ -61,9 +63,11 @@ public class RunApp {//start of class
                 registerNumber = input.nextLine();
                 System.out.println("-----------------------------------");
 
+                // Call the registerUser method and capture the result message
                 String regStatus = loginHandler.registerUser(registerUsername, registerPassword, registerName, registerSurname, registerNumber);
                 System.out.println(regStatus);
 
+                // If registration is successful, save the user data to file and display login details
                 if (regStatus.contains("registered successfully")) {
                     registered = true;
 
@@ -80,7 +84,10 @@ public class RunApp {//start of class
                     System.out.println("-----------------------------------");
                 }
             }
-
+        
+        // user login path
+        // This path allows the user to login with an existing account by checking the credentials against the saved data in the file users.txt. 
+        // If the credentials match an existing account, the user is logged in and can access the messaging features. If not, they are prompted to try again until they enter valid credentials.
         } else if (startChoice == 2) {
 
             boolean foundInFile = false;
@@ -93,11 +100,12 @@ public class RunApp {//start of class
                 String enteredPassword = input.nextLine();
                 System.out.println("-----------------------------------");
 
+                //Check if the entered credentials match an existing user in the file
                 if (fileManager.userExists(enteredUsername, enteredPassword)) {
 
                     String[] userData = fileManager.readRegisteredUsers(enteredUsername, enteredPassword);
 
-                    // Rehydrate the Login object so returnLoginStatus() has firstName/surname
+                    // Fill in the Login object so returnLoginStatus() has firstName/surname
                     // userData: [0]=username [1]=password [2]=name [3]=surname [4]=cellNumber
                     loginHandler.registerUser(userData[0], userData[1], userData[2], userData[3], userData[4]);
 
@@ -107,6 +115,7 @@ public class RunApp {//start of class
                     registerSurname = userData[3];
                     registerNumber = userData[4];
 
+                    // If we found the user in the file, we can attempt to log them in using the loginUser method
                     foundInFile = true;
                     System.out.println("Account found!");
                     System.out.println("-----------------------------------");
@@ -168,8 +177,23 @@ public class RunApp {//start of class
                         System.out.print("Enter the number of messages you want to send: ");
                         int numOfMessages = input.nextInt();
                         input.nextLine();
+                        
+                        System.out.println("Enter the recipients Cell number: ");
+                        String cellNum = input.nextLine();
 
                         for (int i = 0; i < numOfMessages; i++) {
+                            
+                            System.out.println("===================================");
+                            System.out.println("Entered Cellphone Number: " + cellNum);
+                            System.out.println(messageHandler.checkRecipientCell(cellNum));
+                            System.out.println("===================================");
+                            
+                            if(messageHandler.checkRecipientCell(cellNum).contains("incorrectly")){
+                                System.out.println("Enter the recipients Cell number: ");
+                                cellNum = input.nextLine();
+                                i--;
+                                continue;
+                            }
 
                             System.out.println("Please enter your message: ");
                             System.out.print(":$>> ");
@@ -200,6 +224,8 @@ public class RunApp {//start of class
 
                             String msgHashString = messageHandler.createMessageHash(msgID, currentMsgCount, message);
                             messageHandler.setMsgHashString(msgHashString);
+                            
+                            
 
                         }
 

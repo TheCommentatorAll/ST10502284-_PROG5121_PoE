@@ -208,15 +208,15 @@ public class Messages {
      * @return A confirmation string.
      */
     public String storeMessageAsRegular(long msgID, String msgHash, String recipient, String message) {
-        int storedMessageCount = globalMessageCounter - 1;
-        if (storedMessageCount >= 0 && storedMessageCount < sentMessages.length) {
+        int storedMessageCounter = globalMessageCounter - 1;
+        if (storedMessageCounter >= 0 && storedMessageCounter < sentMessages.length) {
             String messageData = "{"
                     + "\"messageID\": \"" + msgID + "\", "
                     + "\"recipient\": \"" + recipient + "\", "
                     + "\"message\": \"" + message + "\", "
                     + "\"messageHash\": \"" + msgHash + "\""
                     + "}";
-            sentMessages[storedMessageCount] = messageData;
+            sentMessages[storedMessageCounter] = messageData;
             return "Message successfully stored as JSON.";
         } else {
             return "Message storage is full.";
@@ -248,9 +248,7 @@ public class Messages {
             }
         }
 
-        jsonArray.append("]");
-
-        try (java.io.FileWriter file = new java.io.FileWriter("messages.json", false)) {//false to overwrite each time
+        try (java.io.FileWriter file = new java.io.FileWriter("messages.json", true)) {//false to overwrite each time
             file.write(jsonArray.toString());
             return "Message successfully stored in messages.json";
         } catch (java.io.IOException e) {
@@ -265,9 +263,10 @@ public class Messages {
      * @return A formatted string of all stored messages in JSON.
      */
     public String printMessages() {
-        if (globalMessageCounter == 0) {
-            return "No messages stored yet.";
+        if (globalMessageCounter == 0 ) {
+            return "No messages sent yet.";
         }
+        
         StringBuilder storedMessages = new StringBuilder();
         storedMessages.append("[\n");
         for (int i = 0; i < globalMessageCounter; i++) {
