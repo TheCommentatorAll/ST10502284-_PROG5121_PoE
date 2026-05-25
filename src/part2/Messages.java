@@ -7,7 +7,7 @@
  * Description: Part 2 Logic message class
  * -------------------------------------------------------------------------
  */
-package poe.part2;
+package part2;
 
 import java.util.concurrent.ThreadLocalRandom;
 
