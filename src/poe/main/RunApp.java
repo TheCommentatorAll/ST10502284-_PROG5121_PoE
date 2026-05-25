@@ -8,9 +8,10 @@ package poe.main;
 
 import java.io.IOException;
 import java.util.Scanner;
-import poe.files.FileManager;
-import poe.part1.logic.Login;
-import poe.part2.logic.Messages;
+import java.util.Set;
+import poe.fileManagement.FileManager;
+import poe.part1.Login;
+import poe.part2.Messages;
 
 public class RunApp {//start of class
 
@@ -170,7 +171,7 @@ public class RunApp {//start of class
 
                 switch (menuSelection) {
 
-                    case 1 -> {
+                    case 1: {
 
                         System.out.println("You have selected: Send Messages");
 
@@ -235,7 +236,7 @@ public class RunApp {//start of class
 
                         switch (messageAction) {
 
-                            case 1 -> {
+                            case 1: {
                                 System.out.println("You have selected: Send Message");
                                 System.out.println("Sending messages...");
                                 System.out.println("Messages sent successfully!");
@@ -247,14 +248,16 @@ public class RunApp {//start of class
 
                             }
 
-                            case 2 -> {
+                            case 2: {
                                 System.out.println("You have selected: Store Messages");
                                 messageHandler.storeMessageAsJSON(messageHandler.getMessageID(), messageHandler.getMsgHashString(), registerNumber, messageHandler.getMessage());
                                 System.out.println("Message stored successfully!");
+                                messageHandler.setGlobalMessageCounter(0);
+                                
 
                             }
 
-                            case 3 -> { //goes back to main menu, does not exit the app
+                            case 3: { //goes back to main menu, does not exit the app
                                 System.out.println("You have selected: Disregard");
                                 System.out.println("Returning to main menu...");
 
@@ -263,7 +266,7 @@ public class RunApp {//start of class
                         }
 
                     }
-                    case 2 -> {
+                    case 2: {
                         System.out.println("You have selected: Show recently sent");
                         System.out.println("Retrieving recently sent messages...");
                         System.out.println(messageHandler.printMessages());
@@ -271,13 +274,13 @@ public class RunApp {//start of class
 
                     }
 
-                    case 3 -> {
+                    case 3: {
                         System.out.println("You have selected: Quit");
                         System.out.println("Exiting application...");
                         runApp = false;
                     }
 
-                    default -> {
+                    default: {
                         System.out.println("Invalid selection, please try again.");
                         messageHandler.displayOptions();
                         System.out.print("\tSelect Option: ");

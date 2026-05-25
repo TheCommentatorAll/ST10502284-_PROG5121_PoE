@@ -1,4 +1,4 @@
-package poe.files;
+package poe.fileManagement;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

@@ -7,7 +7,7 @@
  * Description: Part 2 Logic message class
  * -------------------------------------------------------------------------
  */
-package poe.part2.logic;
+package poe.part2;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -232,11 +232,13 @@ public class Messages {
      * @return A confirmation string.
      */
     public String storeMessageAsJSON(long msgID, String msgHash, String recipient, String message) {
-
+        
+        storeMessageAsRegular(msgID, msgHash, recipient, message);
+        
         // Build one complete JSON array from everything in sentMessages[]
         StringBuilder jsonArray = new StringBuilder();
         jsonArray.append("[\n");
-
+        
         int written = 0; // track how many valid entries we've written
         for (int i = 0; i < globalMessageCounter; i++) {
             if (sentMessages[i] != null) {
@@ -247,8 +249,9 @@ public class Messages {
                 written++;
             }
         }
+        jsonArray.append("\n]");
 
-        try (java.io.FileWriter file = new java.io.FileWriter("messages.json", true)) {//false to overwrite each time
+        try (java.io.FileWriter file = new java.io.FileWriter("messages.json", false)) {//false to overwrite each time
             file.write(jsonArray.toString());
             return "Message successfully stored in messages.json";
         } catch (java.io.IOException e) {
