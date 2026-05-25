@@ -10,7 +10,6 @@ package poe.part2;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import poe.part2.logic.Messages;
 
 public class MessagesTest {//start of class
 
