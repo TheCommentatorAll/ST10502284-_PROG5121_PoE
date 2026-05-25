@@ -4,7 +4,7 @@
  * Assignment: PROG5121 PoE Part 1 - Registration and Login
  * Description: This class handles the validation logic for for the Main class
  */
-package poe.part1;
+package part1;
 
 public class Login {//start of class
 

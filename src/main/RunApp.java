@@ -4,14 +4,13 @@
  * Assignment: PROG5121 PoE Part 1 - Registration and Login
  * Description: Main Class that runs the application, handles user input and output, and calls the necessary methods from the Login and Messages classes
  */
-package poe.main;
+package main;
 
+import fileManagement.FileManager;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.Set;
-import poe.fileManagement.FileManager;
-import poe.part1.Login;
-import poe.part2.Messages;
+import part1.Login;
+import part2.Messages;
 
 public class RunApp {//start of class
 
@@ -134,6 +133,7 @@ public class RunApp {//start of class
         }
 
         //--- USER LOGIN PHASE ---
+        // This loop allows the user to attempt to login until they enter valid credentials. 
         while (!loggedIn) {
             System.out.println("-- LOGIN TO ACCOUNT --");
             System.out.print("Please enter your Username: ");
@@ -143,9 +143,11 @@ public class RunApp {//start of class
             String password = input.nextLine();
             System.out.println("-----------------------------------");
 
+            // Attempt to login with the entered credentials
             boolean isSuccess = loginHandler.loginUser(username, password);
-
-            if (isSuccess) {
+            
+            // If login is successful, set loggedIn to true to exit the loop and display the login status message
+            if (isSuccess) { 
                 loggedIn = true;
                 finalMessage = loginHandler.returnLoginStatus(isSuccess);
                 System.out.println("-- STATUS --");
@@ -156,6 +158,8 @@ public class RunApp {//start of class
             }
         }
 
+        //--- MAIN APPLICATION PHASE ---
+        // Once the user is logged in, they can access the main features of the application, which include sending messages, viewing recently sent messages, and quitting the application.
         if (loggedIn) {
 
             boolean runApp = true;
@@ -169,7 +173,8 @@ public class RunApp {//start of class
                 int menuSelection = input.nextInt();
                 input.nextLine();
 
-                switch (menuSelection) {
+                // The switch statement handles the user's selection from the main menu and directs them to the corresponding functionality based on their choice.
+                switch (menuSelection) {    
 
                     case 1: {
 
@@ -182,6 +187,7 @@ public class RunApp {//start of class
                         System.out.println("Enter the recipients Cell number: ");
                         String cellNum = input.nextLine();
 
+                        // Loop through the number of messages the user wants to send, prompting for message content and performing necessary checks for each message
                         for (int i = 0; i < numOfMessages; i++) {
                             
                             System.out.println("===================================");
@@ -189,6 +195,7 @@ public class RunApp {//start of class
                             System.out.println(messageHandler.checkRecipientCell(cellNum));
                             System.out.println("===================================");
                             
+                            // If the cell number check indicates an issue, prompt the user to re-enter the cell number and retry the current iteration
                             if(messageHandler.checkRecipientCell(cellNum).contains("incorrectly")){
                                 System.out.println("Enter the recipients Cell number: ");
                                 cellNum = input.nextLine();
@@ -203,7 +210,8 @@ public class RunApp {//start of class
                             messageHandler.setMessage(message);
 
                             String lengthCheck = messageHandler.checkMessageLength(message);
-                        
+                            
+                            // If the message length check indicates an issue, prompt the user to re-enter the message and retry the current iteration
                             if (!lengthCheck.equals("Message ready to send.")) {
                                 System.out.println(lengthCheck);
                                 i--; // Decrement i to retry the same iteration
@@ -212,6 +220,7 @@ public class RunApp {//start of class
 
                             System.out.println(lengthCheck);
 
+                            // If the message passes the length check, we proceed to generate a message ID, check its validity, increment the message counter, and create a message hash string.
                             System.out.println("===================================");
                             long msgID = messageHandler.generateMessageID();
                             messageHandler.setMessageID(msgID);
@@ -234,6 +243,8 @@ public class RunApp {//start of class
                         System.out.print("\tSelect Message Action: ");
                         int messageAction = input.nextInt();
 
+                        // After sending the messages, the user is prompted to select an action for the sent messages, which includes options to send the messages, store them as JSON, or disregard them and return to the main menu.
+                        // The switch statement handles the user's selection and performs the corresponding actions based on their choice.
                         switch (messageAction) {
 
                             case 1: {
