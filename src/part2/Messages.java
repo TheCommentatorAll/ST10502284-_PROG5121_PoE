@@ -58,7 +58,8 @@ public class Messages {
         System.out.println("""
                            Option 1): Send Messages
                            Option 2): Show recently sent
-                           Option 3): Quit""");
+                           Option 3): Show stored messages menu
+                           Option 4): Quit""");
 
     }
 
