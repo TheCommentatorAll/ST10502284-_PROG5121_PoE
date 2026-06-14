@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Scanner;
 import part1.Login;
 import part2.Messages;
+import part3.MessagesExtended;
 
 public class RunApp {//start of class
 
@@ -20,6 +21,7 @@ public class RunApp {//start of class
         Login loginHandler = new Login();
         Messages messageHandler = new Messages();
         FileManager fileManager = new FileManager();
+        MessagesExtended reportHandler = new MessagesExtended();
 
         String finalMessage = "";
         String registerName = "";
@@ -84,10 +86,10 @@ public class RunApp {//start of class
                     System.out.println("-----------------------------------");
                 }
             }
-        
-        // user login path
-        // This path allows the user to login with an existing account by checking the credentials against the saved data in the file users.txt. 
-        // If the credentials match an existing account, the user is logged in and can access the messaging features. If not, they are prompted to try again until they enter valid credentials.
+
+            // user login path
+            // This path allows the user to login with an existing account by checking the credentials against the saved data in the file users.txt. 
+            // If the credentials match an existing account, the user is logged in and can access the messaging features. If not, they are prompted to try again until they enter valid credentials.
         } else if (startChoice == 2) {
 
             boolean foundInFile = false;
@@ -145,13 +147,12 @@ public class RunApp {//start of class
 
             // Attempt to login with the entered credentials
             boolean isSuccess = loginHandler.loginUser(username, password);
-            
+
             // If login is successful, set loggedIn to true to exit the loop and display the login status message
-            if (isSuccess) { 
+            if (isSuccess) {
                 loggedIn = true;
-                finalMessage = loginHandler.returnLoginStatus(isSuccess);
                 System.out.println("-- STATUS --");
-                System.out.println(finalMessage);
+                System.out.println(loginHandler.returnLoginStatus(isSuccess));
             } else {
                 System.out.println("Login failed. Please try again.");
                 System.out.println("-----------------------------------");
@@ -174,7 +175,7 @@ public class RunApp {//start of class
                 input.nextLine();
 
                 // The switch statement handles the user's selection from the main menu and directs them to the corresponding functionality based on their choice.
-                switch (menuSelection) {    
+                switch (menuSelection) {
 
                     case 1: {
 
@@ -183,20 +184,20 @@ public class RunApp {//start of class
                         System.out.print("Enter the number of messages you want to send: ");
                         int numOfMessages = input.nextInt();
                         input.nextLine();
-                        
+
                         System.out.println("Enter the recipients Cell number: ");
                         String cellNum = input.nextLine();
 
                         // Loop through the number of messages the user wants to send, prompting for message content and performing necessary checks for each message
                         for (int i = 0; i < numOfMessages; i++) {
-                            
+
                             System.out.println("===================================");
                             System.out.println("Entered Cellphone Number: " + cellNum);
                             System.out.println(messageHandler.checkRecipientCell(cellNum));
                             System.out.println("===================================");
-                            
+
                             // If the cell number check indicates an issue, prompt the user to re-enter the cell number and retry the current iteration
-                            if(messageHandler.checkRecipientCell(cellNum).contains("incorrectly")){
+                            if (messageHandler.checkRecipientCell(cellNum).contains("incorrectly")) {
                                 System.out.println("Enter the recipients Cell number: ");
                                 cellNum = input.nextLine();
                                 i--;
@@ -210,7 +211,7 @@ public class RunApp {//start of class
                             messageHandler.setMessage(message);
 
                             String lengthCheck = messageHandler.checkMessageLength(message);
-                            
+
                             // If the message length check indicates an issue, prompt the user to re-enter the message and retry the current iteration
                             if (!lengthCheck.equals("Message ready to send.")) {
                                 System.out.println(lengthCheck);
@@ -234,58 +235,118 @@ public class RunApp {//start of class
 
                             String msgHashString = messageHandler.createMessageHash(msgID, currentMsgCount, message);
                             messageHandler.setMsgHashString(msgHashString);
-                            
-                            
+
+                            System.out.println(messageHandler.sentMessage());
+                            System.out.print("\tSelect Message Action: ");
+                            int messageAction = input.nextInt();
+
+
+                            // After sending the messages, the user is prompted to select an action for the sent messages, which includes options to send the messages, store them as JSON, or disregard them and return to the main menu.
+                            // The switch statement handles the user's selection and performs the corresponding actions based on their choice.
+                            switch (messageAction) {
+
+                                case 1: {
+                                    System.out.println("You have selected: Send Message");
+                                    System.out.println("Sending messages...");
+                                    System.out.println("Messages sent successfully!");
+
+                                    messageHandler.storeMessageAsRegular(messageHandler.getMessageID(), messageHandler.getMsgHashString(), registerNumber, messageHandler.getMessage());
+                                    reportHandler.populateArrays(messageHandler.getMessageID(), messageHandler.getMsgHashString(), registerNumber, messageHandler.getMessage(), "Sent");
+
+                                    System.out.println(messageHandler.printMessages());
+                                    System.out.println("Total messages sent: " + messageHandler.getGlobalMessageCounter());
+                                    break;
+                                }
+
+                                case 2: {
+                                    System.out.println("You have selected: Store Messages");
+                                    messageHandler.storeMessageAsJSON(messageHandler.getMessageID(), messageHandler.getMsgHashString(), registerNumber, messageHandler.getMessage());
+                                    reportHandler.populateArrays(messageHandler.getMessageID(), messageHandler.getMsgHashString(), registerNumber, messageHandler.getMessage(), "Stored");
+                                    System.out.println("Message stored successfully!");
+                                    break;
+                                }
+
+                                case 3: { //goes back to main menu, does not exit the app
+                                    System.out.println("You have selected: Disregard");
+                                    reportHandler.populateArrays(messageHandler.getMessageID(), messageHandler.getMsgHashString(), registerNumber, messageHandler.getMessage(), "Disregard");
+                                    System.out.println("Returning to main menu...");
+                                    break;
+                                }
+
+                            }
 
                         }
 
-                        System.out.println(messageHandler.sentMessage());
-                        System.out.print("\tSelect Message Action: ");
-                        int messageAction = input.nextInt();
-
-                        // After sending the messages, the user is prompted to select an action for the sent messages, which includes options to send the messages, store them as JSON, or disregard them and return to the main menu.
-                        // The switch statement handles the user's selection and performs the corresponding actions based on their choice.
-                        switch (messageAction) {
-
-                            case 1: {
-                                System.out.println("You have selected: Send Message");
-                                System.out.println("Sending messages...");
-                                System.out.println("Messages sent successfully!");
-
-                                messageHandler.storeMessageAsRegular(messageHandler.getMessageID(), messageHandler.getMsgHashString(), registerNumber, messageHandler.getMessage());
-
-                                System.out.println(messageHandler.printMessages());
-                                System.out.println("Total messages sent: " + messageHandler.getGlobalMessageCounter());
-
-                            }
-
-                            case 2: {
-                                System.out.println("You have selected: Store Messages");
-                                messageHandler.storeMessageAsJSON(messageHandler.getMessageID(), messageHandler.getMsgHashString(), registerNumber, messageHandler.getMessage());
-                                System.out.println("Message stored successfully!");
-                                messageHandler.setGlobalMessageCounter(0);
-                                
-
-                            }
-
-                            case 3: { //goes back to main menu, does not exit the app
-                                System.out.println("You have selected: Disregard");
-                                System.out.println("Returning to main menu...");
-
-                            }
-
-                        }
-
+                        break;
                     }
+
                     case 2: {
                         System.out.println("You have selected: Show recently sent");
                         System.out.println("Retrieving recently sent messages...");
                         System.out.println(messageHandler.printMessages());
                         System.out.println("Total messages sent: " + messageHandler.getGlobalMessageCounter());
-
+                        //System.out.println("Total Stored messages stored: " +);
+                        break;
                     }
 
                     case 3: {
+                        System.out.println("You have selected: Show Full Report");
+                        System.out.println("Arrays populating...");                   
+                        System.out.println("\tSelect Report Option: ");
+                        int reportOption = input.nextInt();
+                        
+                        switch (reportOption) {
+                            case 1: {
+                                reportHandler.displaySendersAndRecipients();
+                                break;
+                            }
+                            case 2: {
+                                String longestMessage = reportHandler.getLongestStoredMessage();
+                                System.out.println("\n--- LONGEST STORED MESSAGE ---");
+                                System.out.println(longestMessage);
+                                break;
+                            }
+                            case 3: {
+                                System.out.print("Enter Message ID to search: ");
+                                long searchID = input.nextLong();
+                                System.out.println(reportHandler.searchByMessageID(searchID));
+                                break;
+                            }
+                            case 4: {
+                                System.out.print("Enter Recipient Number to search: ");
+                                String recipientNum = input.nextLine();
+                                System.out.println(reportHandler.searchByRecipient(recipientNum));
+                                break;
+                            }
+                            case 5: {
+                                System.out.print("Enter Message Hash to delete: ");
+                                String targetHash = input.nextLine();
+                                boolean deleted = reportHandler.deleteMessageByHash(targetHash);
+                                if (deleted) {
+                                    System.out.println("Message with hash " + targetHash + " has been deleted.");
+                                } else {
+                                    System.out.println("No message found with hash " + targetHash + ".");
+                                }
+                                break;
+                            }
+                            case 6: {
+                                reportHandler.displayFullReport();
+                                break;
+                            }
+                            case 7: {
+                                System.out.println("Returning to main menu...");
+                                break;
+                            }
+                            default: {
+                                System.out.println("Invalid selection, returning to main menu...");
+                            }
+                        }
+
+                        break;
+
+                    }
+
+                    case 4: {
                         System.out.println("You have selected: Quit");
                         System.out.println("Exiting application...");
                         runApp = false;
