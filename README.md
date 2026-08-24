@@ -1,4 +1,10 @@
-My First Porgramming Project in University
+--Java Console based messaging application--
+
+- Users are able to send, store, and disregard messages
+- View stored messages
+- View sent messages
+- Manage messages
+
 
 ST10502284
 Nicholas Morris
